@@ -1,5 +1,6 @@
 <?php
 require_once('class.UIDForgotEmail.php');
+require_once('class.PasswordResetEmail.php');
 
 class UsersAPI extends ProfilesAdminAPI
 {
@@ -229,10 +230,10 @@ class UsersAPI extends ProfilesAdminAPI
         $this->user = $request->getAttribute('user');
         if($this->user === false)
         {
-            if(isset($payload->hash))
+            if(isset($payload['hash']))
             {
                 $auth = AuthProvider::getInstance();
-                $this->user = $auth->getUserByResetHash($payload->hash);
+                $this->user = $auth->getUserByResetHash($payload['hash']);
                 return $this->user;
             }
             return false;
@@ -260,6 +261,15 @@ class UsersAPI extends ProfilesAdminAPI
                 unset($obj['old_uid']);
             }
             unset($obj['uid']);
+            if(isset($obj['hash']))
+            {
+                unset($obj['hash']);
+            }
+            if(isset($obj['password']))
+            {
+                $obj['userPassword'] = $obj['password'];
+                unset($obj['password']);
+            }
             $user->editUser($obj);
         }
         catch(\Exception $e)
