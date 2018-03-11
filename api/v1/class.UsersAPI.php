@@ -1,7 +1,8 @@
 <?php
 require_once('class.UIDForgotEmail.php');
+require_once('class.PasswordResetEmail.php');
 
-class UsersAPI extends Http\Rest\RestAPI
+class UsersAPI extends ProfilesAdminAPI
 {
     public function setup($app)
     {
@@ -229,10 +230,10 @@ class UsersAPI extends Http\Rest\RestAPI
         $this->user = $request->getAttribute('user');
         if($this->user === false)
         {
-            if(isset($payload->hash))
+            if(isset($payload['hash']))
             {
                 $auth = AuthProvider::getInstance();
-                $this->user = $auth->getUserByResetHash($payload->hash);
+                $this->user = $auth->getUserByResetHash($payload['hash']);
                 return $this->user;
             }
             return false;
@@ -260,6 +261,15 @@ class UsersAPI extends Http\Rest\RestAPI
                 unset($obj['old_uid']);
             }
             unset($obj['uid']);
+            if(isset($obj['hash']))
+            {
+                unset($obj['hash']);
+            }
+            if(isset($obj['password']))
+            {
+                $obj['userPassword'] = $obj['password'];
+                unset($obj['password']);
+            }
             $user->editUser($obj);
         }
         catch(\Exception $e)
