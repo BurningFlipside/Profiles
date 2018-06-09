@@ -5,7 +5,6 @@ require_once('class.ProfilesLeadPage.php');
 $page = new ProfilesLeadPage('Burning Flipside Profiles - Lead');
 
 $page->addWellKnownJS(JS_CRYPTO_MD5_JS);
-$page->addJSByURI('js/directory.js', false);
 
 $query = '?fmt=csv';
 if(isset($_GET['filter']))
@@ -20,6 +19,7 @@ $page->body .= '
     </div>       
 </div>
 <div class="row">
+  <div class="table-responsive">
     <table class="table" id="directory" style="cursor: pointer;">
         <thead>
             <th>Legal Name</th>
@@ -28,6 +28,7 @@ $page->body .= '
         </thead>
         <tbody></tbody>
     </table>
+  </div>
 </div>
 <div class="row">
 Export: <a href="../api/v1/leads'.$query.'"><img src="../images/csv.svg"/></a>

@@ -1,7 +1,7 @@
 <?php
 require_once('class.ProfilesPage.php');
 require_once('class.FlipSession.php');
-class ProfilesLeadPage extends FlipAdminPage
+class ProfilesLeadPage extends \Http\FlipAdminPage
 {
     private $is_lead;
 
@@ -25,23 +25,12 @@ class ProfilesLeadPage extends FlipAdminPage
             $this->is_admin = $this->is_lead;
         }
         $this->add_leads_css();
-        $this->add_links();
         $this->addWellKnownJS(JS_DATATABLE, false);
         $this->addWellKnownJS(JQUERY_VALIDATE);
         $this->addWellKnownJS(JS_METISMENU);
-        $this->addJSByURI('../_admin/js/admin.js');
+        $this->addJS('../_admin/js/admin.js');
         $this->addWellKnownJS(JS_LOGIN);
-    }
 
-    protected function add_leads_css()
-    {
-        $this->addWellKnownCSS(CSS_DATATABLE);
-        $this->addCSSByURI('../css/profiles.css');
-        $this->addCSSByURI('css/lead.css');
-    }
-
-    public function add_links()
-    {
         $dirMenu = array(
                 'All' => 'directory.php',
                 'AAR' => 'directory.php?filter=aar',
@@ -58,10 +47,19 @@ class ProfilesLeadPage extends FlipAdminPage
                 'Site Sign-Off' => 'directory.php?filter=sign-off',
                 'Volunteer Coordinator' => 'directory.php?filter=vc'
                 );
-        $this->addLink('<span class="fa fa-dashboard"></span> Dashboard', 'index.php');
-        $this->addLink('<span class="fa fa-th-list"></span> Directory', false, $dirMenu);
+
+        $this->content['header']['sidebar'] = array();
+        $this->content['header']['sidebar']['Dashboard'] = array('icon' => 'fa-dashboard', 'url' => 'index.php');
+        $this->content['header']['sidebar']['Directory'] = array('icon' => 'fa-th-list', 'menu' => $dirMenu);
     }
-    
+
+    protected function add_leads_css()
+    {
+        $this->addWellKnownCSS(CSS_DATATABLE);
+        $this->addCSS('../css/profiles.css');
+        $this->addCSS('css/lead.css');
+    }
+
     public function isAdmin()
     {
         return $this->is_lead;

@@ -26,7 +26,6 @@ else
         else
         {
             $page->addNotification('You have successfully registered! You will be redirected to the login page in <span id="secs">5</span> seconds&hellip;', $page::NOTIFICATION_SUCCESS);
-            $page->addJSByURI('js/finish.js');
         }
     }
 }

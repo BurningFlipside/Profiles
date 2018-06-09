@@ -36,9 +36,9 @@ function make_active_link(index, element)
 
 function init_side_menu()
 {
-    $('#side-menu').metisMenu();
-    $(window).bind('load resize', resize);
-    $('.sidebar a').each(make_active_link);
+//    $('#side-menu').metisMenu();
+//    $(window).bind('load resize', resize);
+//    $('.sidebar a').each(make_active_link);
 }
 
 $(init_side_menu);

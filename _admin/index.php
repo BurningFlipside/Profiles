@@ -3,8 +3,8 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 require_once('class.ProfilesAdminPage.php');
 $page = new ProfilesAdminPage('Burning Flipside Profiles - Admin');
-
-$page->addJSByURI('js/index.js');
+$page->setTemplateName('admin-dashboard.html');
+$page->addJS('js/index.js');
 
 $auth = AuthProvider::getInstance();
 $user_count = $auth->getActiveUserCount(false);
@@ -18,21 +18,15 @@ if($sessions !== false)
     $session_count = count($sessions);
 }
 
-
-$page->body .= '
-<div class="row">
-    <div class="col-lg-12">
-        <h1 class="page-header">Dashboard</h1>
-    </div>       
-</div>
-<div class="row">';
-
-$page->add_card('fa-user', $user_count, 'Users', 'users_current.php');
-$page->add_card('fa-inbox', $temp_user_count, 'Pending Users', 'users_pending.php', $page::CARD_GREEN);
-$page->add_card('fa-users', $group_count, 'Groups', 'groups.php', $page::CARD_RED);
-$page->add_card('fa-cloud', $session_count, 'Sessions', 'sessions.php', $page::CARD_YELLOW);
-
-$page->body .= '</div>';
+$page->content['cards'] = array();
+$card = array('icon' => 'fa-user', 'text' => $user_count.' Users', 'link' => 'users_current.php');
+array_push($page->content['cards'], $card);
+$card = array('icon' => 'fa-inbox', 'text' => $temp_user_count.' Pending Users', 'link' => 'users_pending.php', 'color' => 'green');
+array_push($page->content['cards'], $card);
+$card = array('icon' => 'fa-users', 'text' => $group_count.' Groups', 'link' => 'groups.php', 'color' => 'red');
+array_push($page->content['cards'], $card);
+$card = array('icon' => 'fa-cloud', 'text' => $session_count.' Sessions', 'link' => 'sessions.php', 'color' => 'yellow');
+array_push($page->content['cards'], $card);
 
 $page->printPage();
 /* vim: set tabstop=4 shiftwidth=4 expandtab: */

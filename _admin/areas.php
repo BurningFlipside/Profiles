@@ -4,8 +4,6 @@ error_reporting(E_ALL);
 require_once('class.ProfilesAdminPage.php');
 $page = new ProfilesAdminPage('Burning Flipside Profiles - Admin');
 
-$page->addJSByURI('js/areas.js');
-
     $page->body .= '
 <div class="row">
     <div class="col-lg-12">

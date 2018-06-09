@@ -5,7 +5,6 @@ require_once('class.ProfilesAdminPage.php');
 $page = new ProfilesAdminPage('Burning Flipside Profiles - Admin');
 $page->addWellKnownJS(JS_DATATABLE, false);
 $page->addWellKnownCSS(CSS_DATATABLE);
-$page->addJSByURI('js/sessions.js');
 
 $page->body .= '
 <div class="row">

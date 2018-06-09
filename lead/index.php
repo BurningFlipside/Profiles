@@ -3,7 +3,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 require_once('class.ProfilesLeadPage.php');
 $page = new ProfilesLeadPage('Burning Flipside Profiles - Lead');
-
+$page->setTemplateName('admin-dashboard.html');
 $auth = AuthProvider::getInstance();
 $leadGroup = $auth->getGroupByName('Leads');
 $aarGroup  = $auth->getGroupByName('AAR');
@@ -15,20 +15,15 @@ $aar_count  = $aarGroup->member_count();
 $af_count   = $afGroup->member_count();
 $cc_count   = $ccGroup->member_count();
 
-$page->body .= '
-<div class="row">
-    <div class="col-lg-12">
-        <h1 class="page-header">Dashboard</h1>
-    </div>       
-</div>
-<div class="row">';
-
-$page->add_card('fa-user', $lead_count, 'Leads', 'directory.php?filter=lead');
-$page->add_card('fa-bullhorn', $af_count, 'AFs', 'directory.php?filter=af', $page::CARD_GREEN);
-$page->add_card('fa-cc', $cc_count, 'Combustion Chamber', 'directory.php?filter=cc', $page::CARD_YELLOW);
-$page->add_card('fa-fire', $aar_count, 'Board Members', 'directory.php?filter=aar', $page::CARD_RED);
-
-$page->body .= '</div>';
+$page->content['cards'] = array();
+$card = array('icon' => 'fa-user', 'text' => $lead_count.' Leads', 'link' => 'directory.php?filter=lead');
+array_push($page->content['cards'], $card);
+$card = array('icon' => 'fa-bullhorn', 'text' => $af_count.' AFs', 'link' => 'directory.php?filter=af', 'color' => 'green');
+array_push($page->content['cards'], $card);
+$card = array('icon' => 'fa-cc', 'text' => $cc_count.' CC Members', 'link' => 'directory.php?filter=cc', 'color' => 'yellow');
+array_push($page->content['cards'], $card);
+$card = array('icon' => 'fa-fire', 'text' => $aar_count.' Board Members', 'link' => 'directory.php?filter=aar', 'color' => 'red');
+array_push($page->content['cards'], $card);
 
 $page->printPage();
 /* vim: set tabstop=4 shiftwidth=4 expandtab: */
