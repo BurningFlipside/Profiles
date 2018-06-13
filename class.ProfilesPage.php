@@ -19,7 +19,7 @@ class ProfilesPage extends \Http\WebPage
         }
         $this->content['root'] = $this->profiles_root;
         $this->addTemplateDir('./templates', 'Profiles');
-        $this->setTemplateName('@Profiles/main.html');
+        $this->setTemplateName('@Profiles/profile-main.html');
     }
 
     public function addLinks()
