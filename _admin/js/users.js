@@ -77,7 +77,8 @@ function populateTableFromArray(array)
         {'data': 'sn'},
         {'data': 'mail'},
         {'data': 'givenName', 'visible': false}
-      ]
+      ],
+      'deferRender': true
     });
   }
   else
