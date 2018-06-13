@@ -5,7 +5,6 @@ require_once('class.ProfilesAdminPage.php');
 $page = new ProfilesAdminPage('Burning Flipside Profiles - Admin');
 
 $page->addWellKnownJS(JS_BOOTSTRAP_FH);
-$page->addJSByURI('js/user_edit.js');
 
 $hidden = '';
 if(!isset($_GET['uid']))
@@ -14,8 +13,6 @@ if(!isset($_GET['uid']))
 }
 
     $page->body .= '
-<div id="content">
-    Select User: <select id="user_select"></select>
     <form method="post" id="form">
     <fieldset id="user_data" '.$hidden.'>
         <legend id="uid"></legend>
@@ -110,8 +107,7 @@ if(!isset($_GET['uid']))
         </div>
         <button class="btn btn-default" type="submit" id="submit">Submit Changes</button>
     </fieldset>
-    </form>
-</div>';
+    </form>';
 
 $page->printPage();
 /* vim: set tabstop=4 shiftwidth=4 expandtab: */

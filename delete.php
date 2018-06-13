@@ -11,7 +11,7 @@ require_once('class.ProfilesPage.php');
 $page = new ProfilesPage('Burning Flipside Profiles');
 
 //Page specific JS
-$page->addJSByURI('js/delete.js');
+$page->addJS('js/delete.js');
 
 $page->body = '
 <div id="content">

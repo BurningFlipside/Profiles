@@ -12,26 +12,6 @@ function getUID()
     }
 }
 
-function usersDone(jqXHR)
-{
-    if(jqXHR.status !== 200)
-    {
-        alert('Unable to obtain user list!');
-        console.log(jqXHR);
-        return;
-    }
-    var users = jqXHR.responseJSON;
-    for(i = 0; i < users.length; i++)
-    {
-        $('#user_select').append('<option value="'+users[i].uid+'">'+users[i].uid+'</option>');
-    }
-    var uid = getUID();
-    if(uid != null)
-    {
-        $('#user_select').val(uid);
-    }
-}
-
 var leads = null;
 var user = null;
 
@@ -123,20 +103,6 @@ function userDataDone(jqXHR)
     $('#user_data').show(); 
 }
 
-function populateUserDropdown()
-{
-    //Turn off events on the dropdown
-    $('#user_select').change(null);
-    $('#user_select').empty();
-    $.ajax({
-        url: '../api/v1/users?$select=uid',
-        type: 'get',
-        dataType: 'json',
-        complete: usersDone});
-    //Enable events on the dropdown
-    $('#user_select').change(userSelectChange);
-}
-
 function populateAreaDropdown()
 {
     $.when(
@@ -159,12 +125,6 @@ function populateUserData()
             dataType: 'json',
             complete: userDataDone});
     }
-}
-
-function userSelectChange()
-{
-    _uid = $(this).val();
-    populateUserData(); 
 }
 
 function userSubmitDone(jqXHR)
@@ -196,7 +156,6 @@ function userDataSubmitted(e)
 
 function do_user_edit_init()
 {
-    populateUserDropdown();
     populateAreaDropdown();
     $("#form").submit(userDataSubmitted);
 }

@@ -1,7 +1,6 @@
 <?php
-require_once('class.FlipPage.php');
-require_once('class.FlipSession.php');
-class ProfilesPage extends FlipPage
+require_once('Autoload.php');
+class ProfilesPage extends \Http\WebPage
 {
     public $profiles_root;
 
@@ -18,23 +17,12 @@ class ProfilesPage extends FlipPage
         {
             $this->profiles_root = substr($script_dir, strlen($root));
         }
-        $this->add_profiles_css();
-        $this->add_profiles_script();
-        $this->add_login_form();
-        $this->body_tags = 'data-login-url="'.$this->profiles_root.'/api/v1/login"';
+        $this->content['root'] = $this->profiles_root;
+        $this->addTemplateDir('./templates', 'Profiles');
+        $this->setTemplateName('@Profiles/profile-main.html');
     }
 
-    protected function add_profiles_css()
-    {
-        $this->addCSSByURI($this->profiles_root.'/css/profiles.css');
-    }
-
-    protected function add_profiles_script()
-    {
-        $this->addWellKnownJS(JS_LOGIN);
-    }
-
-    public function add_links()
+    public function addLinks()
     {
         if($this->user !== false && $this->user !== null)
         {
