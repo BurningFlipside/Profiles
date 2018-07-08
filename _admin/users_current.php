@@ -10,7 +10,7 @@ $page->addJS('js/users.js');
 
 $page->body .= '
 <div class="col-lg-12">
-    <h1 class="page-header">Current Users</h1>
+    <h1 class="page-header">Current Users <a href="#" onclick="refreshCache();"><i class="fa fa-refresh"></i></a></h1>
 </div>
 <table id="user_table" class="table">
     <thead>
