@@ -7,43 +7,57 @@ function open_dialog(event)
     }
 }
 
-function login_submit_done(data)
+function login_submit_done(jqXHR)
 {
-    if(data.error)
+    if(jqXHR.status !== 200)
     {
-         var failed = getParameterByName('failed')*1;
-         failed++;
-         window.location = window.loginUrl+'?failed='+failed;
+        var failed = getParameterByName('failed')*1;
+        var return_val = window.location;
+        failed++;
+        window.location = window.loginUrl+'?failed='+failed+'&return='+return_val;
     }
     else
     {
-        if(data.return)
+        if(jqXHR.responseJSON !== undefined)
         {
-            window.location = data.return;
+            var data = jqXHR.responseJSON;
+            var url  = '';
+            if(data['return'])
+            {
+                url = data['return'];
+            }
+            else
+            {
+                url = getParameterByName('return');
+                if(url === null)
+                {
+                    url = window.location;
+                }
+            }
+            if(data.extended)
+            {
+            	console.log(data.extended);
+            }
+            window.location = url;
         }
     }
 }
 
-function login_submitted(form)
+function loginSubmitted(e)
 {
+    e.preventDefault();
+    var form = $(this).parents('form');
     $.ajax({
-        url: window.profilesUrl+'/ajax/login.php',
-        data: $(form).serialize(),
+        url: $('body').data('login-url'),
+        data: form.serialize(),
         type: 'post',
         dataType: 'json',
         xhrFields: {withCredentials: true},
-        success: login_submit_done});
+        complete: login_submit_done});
 }
 
 function do_login_init()
 {
-    if($('#login_main_form').length > 0)
-    {
-        $("#login_main_form").validate({
-            debug: true,
-            submitHandler: login_submitted
-        });
-    }
     if($('#login_dialog_form').length > 0)
     {
         var login_link = $(".links a[href*='login']");
@@ -51,11 +65,8 @@ function do_login_init()
         login_link.attr('data-target','#login-dialog');
         login_link.removeAttr('href');
         login_link.css('cursor', 'pointer');
-        $("#login_dialog_form").validate({
-            debug: true,
-            submitHandler: login_submitted
-        });
     }
+    $("[type=submit]").on('click', loginSubmitted);
     if($(window).width() <= 340)
     {
         $('.login-container').css('max-width', $(window).width()-50);
