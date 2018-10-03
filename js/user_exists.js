@@ -39,7 +39,7 @@ function link_accounts()
             break;
     }
     $.ajax({
-        'url': 'api/v1/users/me/Actions/link',
+        'url': window.profilesUrl+'/api/v1/users/me/Actions/link',
         'beforeSend': add_auth_header,
         'data': JSON.stringify(obj),
         'processData': false,

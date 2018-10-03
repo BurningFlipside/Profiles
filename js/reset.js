@@ -84,7 +84,7 @@ function change_password()
         obj.oldpass = $('#oldpass').val();
         obj.password = $('#newpass').val();
         $.ajax({
-            url: 'api/v1/users/me',
+            url: window.profilesUrl+'/api/v1/users/me',
             contentType: 'application/json',
             type: 'PATCH',
             data: JSON.stringify(obj),
@@ -170,7 +170,7 @@ function got_email(result)
     if(result !== null)
     {
         $.ajax({
-            url: 'api/v1/users/Actions/remind_uid',
+            url: window.profilesUrl+'/api/v1/users/Actions/remind_uid',
             data: 'email='+encodeURIComponent(result),
             type: 'POST',
             complete: reminder_post_done
@@ -183,7 +183,7 @@ function got_uid(result)
     if(result !== null)
     {
         $.ajax({
-            url: 'api/v1/users/'+encodeURIComponent(result)+'/Actions/reset_pass',
+            url: window.profilesUrl+'/api/v1/users/'+encodeURIComponent(result)+'/Actions/reset_pass',
             type: 'POST',
             complete: reset_post_done
         });
