@@ -77,7 +77,7 @@ function change_password(e)
         $('#password2').parent().removeClass('has-error');
     }
     $.ajax({
-        url: 'api/v1/users/me',
+        url: window.profilesUrl+'/api/v1/users/me',
         contentType: 'application/json',
         type: 'PATCH',
         data: JSON.stringify(obj),

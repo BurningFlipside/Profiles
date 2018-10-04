@@ -65,7 +65,7 @@ function finish_populate_form(jqXHR, textStatus)
 function start_user_population()
 {
     $.ajax({
-        url: 'api/v1/users/me',
+        url: window.profilesUrl+'/api/v1/users/me',
         type: 'GET',
         dataType: 'json',
         complete: finish_populate_form
@@ -115,7 +115,7 @@ function update_profile()
         obj['jpegPhoto'] = $('#jpegPhoto').attr('src').substring(23);
     }
     $.ajax({
-        url: 'api/v1/users/me',
+        url: window.profilesUrl+'/api/v1/users/me',
         contentType: 'application/json',
         data: JSON.stringify(obj),
         type: 'PATCH',

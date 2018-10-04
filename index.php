@@ -8,7 +8,7 @@ $page->addWellKnownJS(JS_CHEET, false);
 $page->body .= '
     <h1>Welcome to the Burning Flipside Profile System</h1>
     <p>This system allows you to login to the new and improved Burning Flipside website systems.</p>
-    <p>This system will contain all your private data seperately so as to help prevent unwanted display of your data on www.burningflipside.com.
+    <p>This system will contain all your private data seperately so as to help prevent unwanted display of your data on '.$page->wwwUrl.'.
        Additionally, completing your profile on this site will enable you to complete ticket requests and sign up for volunteer shifts even faster than before.</p>';
 
 if($page->user !== null)
