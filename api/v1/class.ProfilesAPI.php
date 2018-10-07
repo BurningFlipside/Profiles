@@ -3,9 +3,16 @@ class ProfilesAPI extends Http\Rest\RestAPI
 {
     public function setup($app)
     {
+        $app->options('/login[/]', array($this, 'options'));
         $app->post('/login[/]', array($this, 'login'));
         $app->post('/logout[/]', array($this, 'logout'));
         $app->post('/zip[/]', array($this, 'validateZip'));
+
+    }
+
+    public function options($request, $response)
+    {
+      return $response->withJson(true);
     }
 
     public function login($request, $response)
@@ -98,3 +105,4 @@ class ProfilesAPI extends Http\Rest\RestAPI
     }
 }
 /* vim: set tabstop=4 shiftwidth=4 expandtab: */
+
