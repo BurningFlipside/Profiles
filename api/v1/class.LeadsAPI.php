@@ -25,9 +25,13 @@ class LeadsAPI extends ProfilesAdminDataAPI
 
     protected function hasPositionAccess()
     {
-        return ($this->user->isInGroupNamed('Leads') ||
+        if(!isset($this->positionAccess))
+        {
+            $this->positionAccess = ($this->user->isInGroupNamed('Leads') ||
                 $this->user->isInGroupNamed('CC') ||
                 $this->user->isInGroupNamed('AFs'));
+        }
+        return $this->positionAccess;
     }
 
     protected function getPositionsByType($type, $auth)
