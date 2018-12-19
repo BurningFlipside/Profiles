@@ -68,7 +68,7 @@ function check_email(e)
         }
     }
     $.ajax({
-        url: window.profilesUrl+'/api/v1/users/Actions/check_email_available',
+        url: '/api/v1/users/Actions/check_email_available',
         data: 'email='+encodeURIComponent(control.value),
         type: 'POST',
         dataType: 'json',
@@ -91,7 +91,7 @@ function check_uid(e)
         return;
     }
     $.ajax({
-        url: window.profilesUrl+'/api/v1/users/Actions/check_uid_available',
+        url: '/api/v1/users/Actions/check_uid_available',
         data: 'uid='+encodeURIComponent(control.value),
         type: 'POST',
         dataType: 'json',
