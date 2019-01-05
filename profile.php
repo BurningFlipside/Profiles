@@ -16,6 +16,7 @@ $page->addWellKnownJS(JS_CRYPTO_MD5_JS);
 $page->addWellKnownJS(JS_BOOTBOX);
 $page->addWellKnownJS(JS_JCROP);
 $page->addWellKnownCSS(CSS_JCROP);
+$page->addJS('js/profile.js');
 
 $page->addNotification('All the information on this page is optional. However, it will make the process of signing up for Ticket Requests, Theme Camp Registrations, Art Project Registrations, and Volunteer Signup faster and easier. If you have any concerns with providing this information we suggest your read our <a href="'.$page->wwwUrl.'/about/privacy" class="alert-link" target="_new">Privacy Policy</a> or contact the <a href="'.$page->wwwUrl.'/contact/" class="alert-link" target="_new">Technology Team</a> or the <a href="'.$page->wwwUrl.'/contact/" class="alert-link" target="_new">AAR Board of Directors</a> with your concerns.', $page::NOTIFICATION_INFO);
 

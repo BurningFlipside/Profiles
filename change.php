@@ -37,6 +37,7 @@ if($user === false || $user === null)
 }
 else
 {
+    $page->addJS('js/change.js');
     $page->addJS('js/zxcvbn-async.js');
     $current = '';
     if($require_current_pass)

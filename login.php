@@ -3,6 +3,8 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 require_once('class.ProfilesPage.php');
 $page = new ProfilesPage('Burning Flipside Profiles Login');
+$page->addJS('js/login.js');
+
 if($page->user !== false && $page->user !== null)
 {
     if(isset($_GET['return']))
