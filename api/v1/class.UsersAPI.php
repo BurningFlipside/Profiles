@@ -462,7 +462,7 @@ class UsersAPI extends ProfilesAdminAPI
         {
             return $response->withJson(true);
         }
-        return $response->withJson(array('res'=>false, 'uidl'=>$user->uid, 'pending'=>$pending));
+        return $response->withJson(array('res'=>false, 'uid'=>$user->uid, 'pending'=>$pending));
     }
 
     public function resetUserPassword($request, $response, $args)
