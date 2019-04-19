@@ -13,6 +13,7 @@ class ProfilesAPI extends Http\Rest\RestAPI
         $params = $request->getParams();
         if(!isset($params['username']) || !isset($params['password']))
         {
+            $response->getBody()->write('Missing Required Parameters!');
             return $response->withStatus(400);
         }
         $auth = AuthProvider::getInstance();
