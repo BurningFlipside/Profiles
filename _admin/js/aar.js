@@ -40,6 +40,17 @@ function disableValues(a, b, f, fa, value) {
   }
 }
 
+function addStateToQueryString(actual, backup, fuckoff, fuckoffa) {
+  var url = window.location.href;
+  var split = url.split('?');
+  var actualS = encodeURIComponent(actual.join(','));
+  var backupS = encodeURIComponent(backup.join(','));
+  var fuckoffS = encodeURIComponent(fuckoff.join(','));
+  var fuckoffaS = encodeURIComponent(fuckoffa.join(','));
+  var newState = {Title: document.title, Url: split[0]+'?actual='+actualS+'&backup='+backupS+'&fuckoff='+fuckoffS+'&fuckoffa='+fuckoffaS};
+  history.pushState(newState, newState.Title, newState.Url);
+}
+
 function updateAllDropdowns() {
   var actual = [];
   var backup = [];
@@ -88,6 +99,7 @@ function updateAllDropdowns() {
       fuckoffa.push(f.val());
     }
   }
+  addStateToQueryString(actual, backup, fuckoff, fuckoffa);
   //Re-enable everything...
   $('option').prop('disabled', false);
   for(var i = 0; i < actual.length; i++) {
@@ -293,6 +305,18 @@ function initSummary(index, element) {
   }
 }
 
+function processParam(value, argument) {
+  var array = value.split(',');
+  for(var i = 0; i < array.length; i++) {
+    var id = argument+'_'+(i+1);
+    if(argument === 'fuckoffa') {
+      id = 'fuckoff_'+(i+1)+'a';
+    }
+    $('#'+id).val(array[i]);
+  }
+  updateAllDropdowns();
+}
+
 function initPage() {
   $('.actual').css('background', 'red');
   $('.backup').css('background', 'yellow');
@@ -302,6 +326,9 @@ function initPage() {
   $('.actual').change(changeActual);
   $('.backup').change(changeBackup);
   $('.fuck').change(changeFuck);
+  var url = new URL(location.href);
+  var params = new URLSearchParams(url.search.slice(1));
+  params.forEach(processParam);
 }
 
 $(initPage)
