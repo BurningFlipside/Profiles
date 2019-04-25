@@ -310,7 +310,10 @@ function processParam(value, argument) {
   for(var i = 0; i < array.length; i++) {
     var id = argument+'_'+(i+1);
     if(argument === 'fuckoffa') {
-      id = 'fuckoff_'+(i+1)+'a';
+      id = 'fuck_'+(i+1)+'a';
+    }
+    else if(argument === 'fuckoff') {
+      id = 'fuck_'+(i+1);
     }
     $('#'+id).val(array[i]);
   }

@@ -30,7 +30,7 @@ $page->body .= '
         <td><select id="actual_5" class="actual"></select></td>
         <td><select id="actual_7" class="actual"></select></td>
         <td><select id="actual_9" class="actual"></select></td>
-        <td><select id="actual_11" class="actual"></select></td>
+        <td><select id="actual_11" class="actual" data-weight="0.5" data-length="6"></select></td>
         <td><select id="actual_14" class="actual"></select></td>
         <td><select id="actual_16" class="actual"></select></td>
       </tr>
