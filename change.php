@@ -28,11 +28,11 @@ if($user === false || $user === null)
 {
     if(isset($_GET['hash']))
     {
-        $page->addNotification('This reset hash is no longer valid. Please select the neweset reset link in your email', FlipPage::NOTIFICATION_FAILED);
+        $page->addNotification('This reset hash is no longer valid. Please select the neweset reset link in your email', ProfilesPage::NOTIFICATION_FAILED);
     }
     else
     {
-        $page->addNotification('Please Log in first!', FlipPage::NOTIFICATION_FAILED);
+        $page->addNotification('Please Log in first!', ProfilesPage::NOTIFICATION_FAILED);
     }
 }
 else

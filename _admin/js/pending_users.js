@@ -1,7 +1,7 @@
 function execute_complete(jqXHR)
 {
     var data = jqXHR.responseJSON;
-    if(data.overall == true)
+    if(data.overall == true || data === true)
     {
         $("#pending_table").dataTable().api().ajax.reload();
     }

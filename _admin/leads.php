@@ -44,7 +44,7 @@ $page = new ProfilesAdminPage('Burning Flipside Profiles - Admin');
                 <input type="text" class="form-control" id="name" required/>
             </div>
         </div>
-        <button class="btn btn-default" id="submit">Submit</button>
+        <button class="btn btn-primary" id="submit">Submit</button>
     </fieldset>
 </div>';
 

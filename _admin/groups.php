@@ -11,19 +11,21 @@ $page->body .= '
     <h1 class="page-header">Groups</h1>
 </div>
 <div>
-    <select name="group_action" id="group_action">
-        <option value="none">Action...</option>
-        <option value="del">Delete Group</option>
-        <option value="new">Add New Group...</option>
+  <div class="row">
+    <select class="form-control col-sm-2" name="group_action" id="group_action">
+      <option value="none">Action...</option>
+      <option value="del">Delete Group</option>
+      <option value="new">Add New Group...</option>
     </select>
-    <input type="button" value="Apply" onclick="groupExecute()"/>
-    <table id="group_table">
-        <thead>
-            <th>Group Name</th>
-            <th>Description</th>
-        </thead>
-        <tbody></tbody>
-    </table>
+    <button class="btn btn-primary col-sm-1" type="button" onclick="groupExecute()">Apply</button>
+  </div>
+  <table id="group_table">
+    <thead>
+      <th>Group Name</th>
+      <th>Description</th>
+    </thead>
+    <tbody></tbody>
+  </table>
 </div>';
 
 $page->printPage();
