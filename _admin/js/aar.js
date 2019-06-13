@@ -320,6 +320,15 @@ function processParam(value, argument) {
   updateAllDropdowns();
 }
 
+function repopulate(year) {
+  if(year === 2019) {
+    processParam(decodeURIComponent('Kat%2CAdam%2CIzzi%2CProblem%2CTim%2CKat%2CIzzi%2CProblem%2CAdam%2CCooper%2CTim%2CProblem%2CAdam%2CCooper%2CKat%2CTim'), 'actual');
+    processParam(decodeURIComponent('%2C%2C%2CCooper%2CIzzi%2CCooper%2CTim%2CKat%2CIzzi%2CProblem%2CAdam%2CIzzi%2CKat%2CProblem%2CAdam%2CProblem'), 'backup');
+    processParam(decodeURIComponent('%2C%2C%2C%2C%2CAdam%2C%2CCooper%2C%2CIzzi%2C%2C%2C%2C%2C%2C'), 'fuckoff');
+    processParam(decodeURIComponent('%2C%2C%2C%2C%2CProblem%2C%2CTim%2C%2CKat%2C%2C%2C%2C%2C%2C'), 'fuckoffa');
+  }
+}
+
 function initPage() {
   $('.actual').css('background', 'red');
   $('.backup').css('background', 'yellow');

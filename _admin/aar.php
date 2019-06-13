@@ -94,6 +94,9 @@ $page->body .= '
       <tr><th>Name</th><th>Actual Shifts</th><th>Backup Shifts</th><th>Hours Between Actual Shifts</th><th>Hours Between Backup Shifts</th><th>Hours Between Shifts</th></tr>
     </table>
   </div>
+  <div class="row">
+    <button type="button" class="btn btn-primary" onclick="repopulate(2019);">Repopulate 2019 schedule</button>
+  </div>
 </div>
 ';
 

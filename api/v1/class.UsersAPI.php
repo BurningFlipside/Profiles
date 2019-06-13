@@ -14,6 +14,7 @@ class UsersAPI extends ProfilesAdminAPI
         $app->get('/{uid}/groups[/]', array($this, 'listGroupsForUser'));
         $app->post('/{uid}/Actions/link[/]', array($this, 'linkUser'));
         $app->post('/{uid}/Actions/reset_pass[/]', array($this, 'resetUserPassword'));
+        $app->post('/me/Actions/RemoveEmail[/]', array($this, 'removeEmail'));
         $app->post('/Actions/check_email_available[/]', array($this, 'checkEmailAvailable'));
         $app->post('/Actions/check_uid_available[/]', array($this, 'checkUidAvailable'));
         $app->post('/Actions/remind_uid[/]', array($this, 'remindUid'));
@@ -489,6 +490,34 @@ class UsersAPI extends ProfilesAdminAPI
             throw new \Exception('Unable to send email!');
         }
         return $response->withJson(true);
+    }
+
+    public function removeEmail($request, $response, $args)
+    {
+        $this->validateLoggedIn($request);
+        $obj = $request->getParsedBody();
+        if(!$this->userIsMe($request, 'me'))
+        {
+            return $response->withStatus(401);
+        }
+        if(!isset($this->user->allMail))
+        {
+            return $response->withJSON(array('error' => 'User does not have multiple email addresses'), 409);
+        }
+        $email = $obj['email'];
+        if(!in_array($email, $this->user->allMail))
+        {
+            return $response->withJSON(array('error' => 'User does not have email address '.$email), 409);
+        }
+        $res = $this->user->removeEmail($email);
+        if($res)
+        {
+            return $response->withStatus(204);
+        }
+        else
+        {
+            return $response->withStatus(500);
+        }
     }
 
     public function remindUid($request, $response, $args)

@@ -52,6 +52,5 @@ $page->body .= '
     '.$auth_links_str.'
     </div>
 </div>';
-
 $page->printPage();
 // vim: set tabstop=4 shiftwidth=4 expandtab:
