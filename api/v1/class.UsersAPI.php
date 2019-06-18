@@ -14,6 +14,7 @@ class UsersAPI extends ProfilesAdminAPI
         $app->get('/{uid}/groups[/]', array($this, 'listGroupsForUser'));
         $app->post('/{uid}/Actions/link[/]', array($this, 'linkUser'));
         $app->post('/{uid}/Actions/reset_pass[/]', array($this, 'resetUserPassword'));
+        $app->post('/{uid}/Actions/ClearPosition[/]', array($this, 'clearPosition'));
         $app->post('/me/Actions/RemoveEmail[/]', array($this, 'removeEmail'));
         $app->post('/Actions/check_email_available[/]', array($this, 'checkEmailAvailable'));
         $app->post('/Actions/check_uid_available[/]', array($this, 'checkUidAvailable'));
@@ -490,6 +491,25 @@ class UsersAPI extends ProfilesAdminAPI
             throw new \Exception('Unable to send email!');
         }
         return $response->withJson(true);
+    }
+
+    public function clearPosition($request, $response, $args)
+    {
+        $this->validateLoggedIn($request);
+        if(!$this->user->isInGroupNamed('LDAPAdmins'))
+        {
+            return $response->withStatus(401);
+        }
+        $uid = $args['uid'];
+        $auth = \AuthProvider::getInstance();
+        $filter = new \Data\Filter("uid eq $uid");
+        $users = $auth->getUsersByFilter($filter);
+        if(empty($users))
+        {
+            return $response->withStatus(404);
+        }
+        $users[0]->editUser(array('title'=>null, 'ou'=>null));
+        return $response->withStatus(204);
     }
 
     public function removeEmail($request, $response, $args)

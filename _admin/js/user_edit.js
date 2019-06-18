@@ -103,6 +103,15 @@ function userDataDone(jqXHR)
     $('#user_data').show(); 
 }
 
+function clearPosition() {
+  $.ajax({
+    url: '../api/v1/users/'+getUID()+'/Actions/ClearPosition',
+    method: 'POST',
+    complete: userSubmitDone
+  });
+  return false;
+}
+
 function populateAreaDropdown()
 {
     $.when(
@@ -129,7 +138,7 @@ function populateUserData()
 
 function userSubmitDone(jqXHR)
 {
-    if(jqXHR.status !== 200)
+    if(jqXHR.status !== 200 && jqXHR.status !== 204)
     {
         alert('Unable to set user data!');
         console.log(jqXHR);

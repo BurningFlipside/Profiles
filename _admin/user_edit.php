@@ -88,6 +88,7 @@ $page->body .= '
             </div>
         </div>
         <button class="btn btn-primary" type="submit" id="submit">Submit Changes</button>
+        <button class="btn btn-secondary" onClick="return clearPosition();">Clear Position Info</button>
     </fieldset>
     </form>';
 
