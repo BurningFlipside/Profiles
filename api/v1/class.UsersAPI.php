@@ -263,10 +263,6 @@ class UsersAPI extends ProfilesAdminAPI
                 unset($obj['old_uid']);
             }
             unset($obj['uid']);
-            if(isset($obj['hash']))
-            {
-                unset($obj['hash']);
-            }
             if(isset($obj['password']))
             {
                 $obj['userPassword'] = $obj['password'];
