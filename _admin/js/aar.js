@@ -1,7 +1,7 @@
 var aarMembers = [
   'Adam',
   'Cooper',
-  'Izzi',
+//  'Izzi',
   'Kat',
   'Problem',
   'Tim'

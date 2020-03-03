@@ -42,7 +42,7 @@ class ProfilesLeadPage extends \Http\FlipAdminPage
                 'Communications' => 'directory.php?filter=Comm',
                 'Genesis' => 'directory.php?filter=Genesis',
                 'Safety' => 'directory.php?filter=Safety',
-                'Site-Ops' => 'directory.php?filter=site-ops',
+                'Site-Ops' => 'directory.php?filter=Ops',
                 'Site Prep' => 'directory.php?filter=siteprep',
                 'Site Sign-Off' => 'directory.php?filter=sign-off',
                 'Volunteer Coordinator' => 'directory.php?filter=vc'
