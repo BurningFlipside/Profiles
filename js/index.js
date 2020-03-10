@@ -22,9 +22,13 @@ function konami()
     setTimeout(clear_konami, 5000);
 }
 
-function pageInit()
-{
-    cheet('up up down down left right left right b a', konami);
+function pageInit() {
+  if(window.cheet === undefined) {
+    //Wait for the cheet script to load...
+    setTimeout(pageInit, 100);
+    return;
+  }
+  cheet('up up down down left right left right b a', konami);
 }
 
 $(pageInit);
