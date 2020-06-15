@@ -16,6 +16,49 @@ function validate_zip(e)
 {
 }
 
+function setIfValid(json, fieldName) {
+  var value = json[fieldName];
+  if(value === false || value === 'false') {
+    return;
+  }
+  $('#'+fieldName).val(value);
+}
+
+function removedEmail(jqXHR) {
+  if(jqXHR.status !== 200) {
+    console.log(jqXHR);
+    alert('Unable to delete email');
+    return;
+  }
+  location.reload();
+}
+
+function removeEmail(email) {
+  bootbox.confirm({
+    message: 'Are you sure you want to delete the email '+email+' from your account?',
+    buttons: {
+        confirm: {
+            label: 'Yes',
+            className: 'btn-danger'
+        },
+        cancel: {
+            label: 'No'
+        }
+    },
+    callback: function (result) {
+      if(result) {
+        $.ajax({
+          url: 'api/v1/users/me/Actions/RemoveEmail',
+          contentType: 'application/json',
+          data: JSON.stringify({'email': email}),
+          method: 'POST',
+          complete: removedEmail
+        });
+      }
+    }
+});
+}
+
 function finish_populate_form(jqXHR, textStatus)
 {
     if(textStatus === 'success')
@@ -23,14 +66,14 @@ function finish_populate_form(jqXHR, textStatus)
         var json = jqXHR.responseJSON;
         $('#uid_label').html(json.uid);
         $('#uid').val(json.uid);
-        $('#givenName').val(json.givenName);
-        $('#sn').val(json.sn);
-        $('#displayName').val(json.displayName);
+        setIfValid(json, 'givenName');
+        setIfValid(json, 'sn');
+        setIfValid(json, 'displayName');
         $('#mail').val(json.mail);
-        $('#mobile').val(json.mobile);
-        $('#postalAddress').val(json.postalAddress);
-        $('#postalCode').val(json.postalCode);
-        $('#l').val(json.l);
+        setIfValid(json, 'mobile');
+        setIfValid(json, 'postalAddress');
+        setIfValid(json, 'postalCode');
+        setIfValid(json, 'l');
         if(json.jpegPhoto != undefined && json.jpegPhoto.length > 0)
         {
             var img = new Image();

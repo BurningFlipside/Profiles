@@ -2,3 +2,7 @@
 
 {% set css = ["#{root}/css/profiles.css"] %}
 {% set loginUrl = "#{root}/api/v1/login" %}
+{% block headBlock %}
+  {{ parent() }}
+  <meta name="Description" content="The Burning Flipside profile/account system. You can signup for an account, edit your account, or delete your account">
+{% endblock %}

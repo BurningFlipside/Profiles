@@ -4,6 +4,7 @@ error_reporting(E_ALL);
 
 require_once('class.ProfilesPage.php');
 $page = new ProfilesPage('Burning Flipside Profiles');
+$page->addJS('js/finish.js');
 
 if(!isset($_GET['hash']))
 {
