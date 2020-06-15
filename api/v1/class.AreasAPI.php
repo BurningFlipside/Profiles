@@ -27,8 +27,8 @@ class AreasAPI extends ProfilesAdminDataAPI
     public function getLeads($request, $response, $args)
     {
         $this->validateLoggedIn($request);
-        $dataTable = DataSetFactory::getDataTableByNames('profiles', 'position');
-        $odata = $request->getAttribute('odata', new \ODataParams(array()));
+        $dataTable = \Flipside\DataSetFactory::getDataTableByNames('profiles', 'position');
+        $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
         if($args['name'] === '*')
         {
             $leads = $dataTable->read($odata->filter, $odata->select, $odata->top,
@@ -36,7 +36,7 @@ class AreasAPI extends ProfilesAdminDataAPI
         }
         else
         {
-            $leads = $dataTable->read(new \Data\Filter("area eq '".$args['name']."'"), $odata->select, $odata->top,
+            $leads = $dataTable->read(new \Flipside\Data\Filter("area eq '".$args['name']."'"), $odata->select, $odata->top,
                                   $odata->skip, $odata->orderby);
         }
         if(empty($leads))

@@ -1,5 +1,5 @@
 <?php
-class ProfilesAdminAPI extends Http\Rest\RestAPI
+class ProfilesAdminAPI extends Flipside\Http\Rest\RestAPI
 {
     protected $user;
 

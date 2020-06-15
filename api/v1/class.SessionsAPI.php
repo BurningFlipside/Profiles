@@ -10,7 +10,7 @@ class SessionsAPI extends ProfilesAdminAPI
     public function getSessions($request, $response)
     {
         $this->validateIsAdmin($request);
-        $sessions = FlipSession::getAllSessions();
+        $sessions = \Flipside\FlipSession::getAllSessions();
         if($sessions !== false)
         {
             $count = count($sessions);
@@ -29,7 +29,7 @@ class SessionsAPI extends ProfilesAdminAPI
     public function endSession($request, $response, $args)
     {
         $this->validateIsAdmin($request);
-        $ret = FlipSession::deleteSessionById($args['id']);
+        $ret = \Flipside\FlipSession::deleteSessionById($args['id']);
         return $response->withJson($ret);
     }
 }

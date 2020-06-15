@@ -15,21 +15,21 @@ function doAuthByType($type, $src, $auth, $ref)
         $res = $google->authenticate($_GET['code'], $currentUser);
         switch($res)
         {
-            case \Auth\Authenticator::SUCCESS:
+            case \Flipside\Auth\Authenticator::SUCCESS:
                 header('Location: '.$ref);
                 die();
             default:
-            case \Auth\Authenticator::LOGIN_FAILED:
+            case \Flipside\Auth\Authenticator::LOGIN_FAILED:
                 header('Location: login.php');
                 die();
-            case \Auth\Authenticator::ALREADY_PRESENT:
+            case \Flipside\Auth\Authenticator::ALREADY_PRESENT:
                 header('Location: user_exists.php?src='.$src.'&uid='.$currentUser->uid);
                 die();
         }
     }
 }
 
-$auth = AuthProvider::getInstance();
+$auth = \Flipside\AuthProvider::getInstance();
 $src  = false;
 if(isset($_GET['src']))
 {
@@ -53,10 +53,10 @@ if(isset($_SERVER['HTTP_REFERER']) && strstr($_SERVER['HTTP_REFERER'], 'google.c
 switch($src)
 {
     case 'google':
-        doAuthByType('Auth\GoogleAuthenticator', $src, $auth, $ref);
+        doAuthByType('Flipside\Auth\GoogleAuthenticator', $src, $auth, $ref);
         break;
     case 'twitter':
-        $twitter = $auth->getMethodByName('Auth\TwitterAuthenticator');
+        $twitter = $auth->getMethodByName('Flipside\Auth\TwitterAuthenticator');
         if(!isset($_GET['oauth_token']) || !isset($_GET['oauth_verifier']))
         {
             $twitter->redirect();
@@ -81,7 +81,7 @@ switch($src)
         }
         break;
     case 'gitlab':
-        doAuthByType('Auth\OAuth2\GitLabAuthenticator', $src, $auth, $ref);
+        doAuthByType('Flipside\Auth\OAuth2\GitLabAuthenticator', $src, $auth, $ref);
         break;
         //Generic OAuth...
     default:
