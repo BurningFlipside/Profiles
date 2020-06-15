@@ -1,6 +1,6 @@
 <?php
-require_once('Autoload.php');
-class ProfilesAdminPage extends \Http\FlipAdminPage
+require_once('../Autoload.php');
+class ProfilesAdminPage extends \Flipside\Http\FlipAdminPage
 {
     public function __construct($title)
     {

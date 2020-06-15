@@ -1,7 +1,6 @@
 <?php
-require_once('class.ProfilesPage.php');
-require_once('class.FlipSession.php');
-class ProfilesLeadPage extends \Http\FlipAdminPage
+require_once('../class.ProfilesPage.php');
+class ProfilesLeadPage extends \Flipside\Http\FlipAdminPage
 {
     private $is_lead;
 

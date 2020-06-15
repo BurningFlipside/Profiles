@@ -1,6 +1,6 @@
 <?php
 require_once('Autoload.php');
-class ProfilesPage extends \Http\WebPage
+class ProfilesPage extends \Flipside\Http\WebPage
 {
     public $profiles_root;
 
