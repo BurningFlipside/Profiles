@@ -82,12 +82,12 @@ function check_uid(e)
     var control = e.target;
     if(control.value.indexOf(',') > -1)
     {
-        flagInvalid($(control));
+        flagInvalid($(control), 'username invalid');
         return;
     }
     if(control.value.indexOf('=') > -1)
     {
-        flagInvalid($(control));
+        flagInvalid($(control), 'username invalid');
         return;
     }
     $.ajax({
@@ -106,22 +106,22 @@ function check_pass(e)
     var value = control.value;
     if(value.length < 4)
     {
-        flagInvalid($(control));
+        flagInvalid($(control), 'password too short');
         return;
     }
     if(/[a-z]/.test(value) === false)
     {
-        flagInvalid($(control));
+        flagInvalid($(control), 'password must include lowercase characters');
         return;
     }
     if(/[A-Z]/.test(value) === false)
     {
-        flagInvalid($(control));
+        flagInvalid($(control), 'password must include uppercase characters');
         return;
     }
     if(/[0-9]/.test(value) === false)
     {
-        flagInvalid($(control));
+        flagInvalid($(control), 'password must include numeric characters');
         return;
     }
     flagValid($(control));
@@ -210,7 +210,7 @@ function submit_click(e)
     var pass2 = $('#password2').val();
     if(pass !== pass2)
     {
-        flagInvalid($('#password2'));
+        flagInvalid($('#password2'), 'passwords do not match');
     }
     else
     {

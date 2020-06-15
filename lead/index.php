@@ -4,16 +4,32 @@ error_reporting(E_ALL);
 require_once('class.ProfilesLeadPage.php');
 $page = new ProfilesLeadPage('Burning Flipside Profiles - Lead');
 $page->setTemplateName('admin-dashboard.html');
-$auth = AuthProvider::getInstance();
+$auth = Flipside\AuthProvider::getInstance();
 $leadGroup = $auth->getGroupByName('Leads');
 $aarGroup  = $auth->getGroupByName('AAR');
 $afGroup   = $auth->getGroupByName('AFs');
 $ccGroup   = $auth->getGroupByName('CC');
 
-$lead_count = $leadGroup->member_count();
-$aar_count  = $aarGroup->member_count();
-$af_count   = $afGroup->member_count();
-$cc_count   = $ccGroup->member_count();
+$lead_count = 0;
+if($leadGroup !== false)
+{
+    $lead_count = $leadGroup->member_count();
+}
+$aar_count = 0;
+if($aarGroup !== false)
+{
+    $aar_count  = $aarGroup->member_count();
+}
+$af_count = 0;
+if($afGroup !== false)
+{
+    $af_count   = $afGroup->member_count();
+}
+$cc_count = 0;
+if($ccGroup !== false)
+{
+    $cc_count   = $ccGroup->member_count();
+}
 
 $page->content['cards'] = array();
 $card = array('icon' => 'fa-user', 'text' => $lead_count.' Leads', 'link' => 'directory.php?filter=lead');

@@ -1,6 +1,6 @@
 <?php
-require_once('Autoload.php');
-class ProfilesAdminPage extends \Http\FlipAdminPage
+require_once('../Autoload.php');
+class ProfilesAdminPage extends \Flipside\Http\FlipAdminPage
 {
     public function __construct($title)
     {
@@ -16,8 +16,9 @@ class ProfilesAdminPage extends \Http\FlipAdminPage
             'Leads' => 'leads.php'
         );
 
+        $this->content['loginUrl'] = '../api/v1/login';
         $this->content['header']['sidebar'] = array();
-        $this->content['header']['sidebar']['Dashboard'] = array('icon' => 'fa-dashboard', 'url' => 'index.php');
+        $this->content['header']['sidebar']['Dashboard'] = array('icon' => 'fa-tachometer-alt', 'url' => 'index.php');
         $this->content['header']['sidebar']['Users'] = array('icon' => 'fa-user', 'menu' => $users_menu);
         $this->content['header']['sidebar']['Groups'] = array('icon' => 'fa-users', 'url' => 'groups.php');
         $this->content['header']['sidebar']['Positions'] = array('icon' => 'fa-briefcase', 'menu' => $pos_menu);

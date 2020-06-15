@@ -10,6 +10,7 @@ error_reporting(E_ALL);
 require_once('class.ProfilesPage.php');
 $page = new ProfilesPage('Burning Flipside Profiles Reset');
 $page->addWellKnownJS(JS_BOOTBOX);
+$page->addJS('js/reset.js');
 
 if($page->user !== false && $page->user !== null)
 {

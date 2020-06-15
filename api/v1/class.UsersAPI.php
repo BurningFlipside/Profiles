@@ -14,6 +14,8 @@ class UsersAPI extends ProfilesAdminAPI
         $app->get('/{uid}/groups[/]', array($this, 'listGroupsForUser'));
         $app->post('/{uid}/Actions/link[/]', array($this, 'linkUser'));
         $app->post('/{uid}/Actions/reset_pass[/]', array($this, 'resetUserPassword'));
+        $app->post('/{uid}/Actions/ClearPosition[/]', array($this, 'clearPosition'));
+        $app->post('/me/Actions/RemoveEmail[/]', array($this, 'removeEmail'));
         $app->post('/Actions/check_email_available[/]', array($this, 'checkEmailAvailable'));
         $app->post('/Actions/check_uid_available[/]', array($this, 'checkUidAvailable'));
         $app->post('/Actions/remind_uid[/]', array($this, 'remindUid'));
@@ -261,10 +263,6 @@ class UsersAPI extends ProfilesAdminAPI
                 unset($obj['old_uid']);
             }
             unset($obj['uid']);
-            if(isset($obj['hash']))
-            {
-                unset($obj['hash']);
-            }
             if(isset($obj['password']))
             {
                 $obj['userPassword'] = $obj['password'];
@@ -462,7 +460,7 @@ class UsersAPI extends ProfilesAdminAPI
         {
             return $response->withJson(true);
         }
-        return $response->withJson(array('res'=>false, 'uidl'=>$user->uid, 'pending'=>$pending));
+        return $response->withJson(array('res'=>false, 'uid'=>$user->uid, 'pending'=>$pending));
     }
 
     public function resetUserPassword($request, $response, $args)
@@ -489,6 +487,53 @@ class UsersAPI extends ProfilesAdminAPI
             throw new \Exception('Unable to send email!');
         }
         return $response->withJson(true);
+    }
+
+    public function clearPosition($request, $response, $args)
+    {
+        $this->validateLoggedIn($request);
+        if(!$this->user->isInGroupNamed('LDAPAdmins'))
+        {
+            return $response->withStatus(401);
+        }
+        $uid = $args['uid'];
+        $auth = \AuthProvider::getInstance();
+        $filter = new \Data\Filter("uid eq $uid");
+        $users = $auth->getUsersByFilter($filter);
+        if(empty($users))
+        {
+            return $response->withStatus(404);
+        }
+        $users[0]->editUser(array('title'=>null, 'ou'=>null));
+        return $response->withStatus(204);
+    }
+
+    public function removeEmail($request, $response, $args)
+    {
+        $this->validateLoggedIn($request);
+        $obj = $request->getParsedBody();
+        if(!$this->userIsMe($request, 'me'))
+        {
+            return $response->withStatus(401);
+        }
+        if(!isset($this->user->allMail))
+        {
+            return $response->withJSON(array('error' => 'User does not have multiple email addresses'), 409);
+        }
+        $email = $obj['email'];
+        if(!in_array($email, $this->user->allMail))
+        {
+            return $response->withJSON(array('error' => 'User does not have email address '.$email), 409);
+        }
+        $res = $this->user->removeEmail($email);
+        if($res)
+        {
+            return $response->withStatus(204);
+        }
+        else
+        {
+            return $response->withStatus(500);
+        }
     }
 
     public function remindUid($request, $response, $args)

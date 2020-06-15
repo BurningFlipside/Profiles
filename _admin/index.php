@@ -6,12 +6,12 @@ $page = new ProfilesAdminPage('Burning Flipside Profiles - Admin');
 $page->setTemplateName('admin-dashboard.html');
 $page->addJS('js/index.js');
 
-$auth = AuthProvider::getInstance();
+$auth = \Flipside\AuthProvider::getInstance();
 $user_count = $auth->getActiveUserCount(false);
 $temp_user_count = $auth->getPendingUserCount();
 $group_count = $auth->getGroupCount();
 
-$sessions = FlipSession::getAllSessions();
+$sessions = \Flipside\FlipSession::getAllSessions();
 $session_count = 0;
 if($sessions !== false)
 {

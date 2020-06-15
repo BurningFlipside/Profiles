@@ -8,3 +8,14 @@
 AddType image/vnd.microsoft.icon .ico
 ExpiresActive on
 ExpiresByType image/vnd.microsoft.icon "access plus 3 months"
+
+# Block site from being framed with X-Frame-Options and CSP
+Header add Content-Security-Policy "frame-ancestors 'none'"
+#Header add Content-Security-Policy-Report-Only "script-src 'unsafe-inline' 'strict-dynamic' https:; object-src 'none'; base-uri 'none'; frame-ancestors 'none';"
+Header add X-Frame-Options "DENY"
+
+# Block pages from loading when they detect reflected XSS attacks
+Header add X-XSS-Protection "1; mode=block"
+
+# Prevent browsers from incorrectly detecting non-scripts as scripts
+Header add X-Content-Type-Options "nosniff"
