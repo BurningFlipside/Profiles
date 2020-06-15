@@ -8,10 +8,13 @@
 * @copyright Copyright (c) 2015, Austin Artistic Reconstruction
 * @license http://www.apache.org/licenses/ Apache 2.0 License
  */
-
 if(file_exists(__DIR__ . '/vendor/autoload.php'))
 {
     require(__DIR__ . '/vendor/autoload.php');
+}
+else if(file_exists(__DIR__ . '/../common/Autoload.php'))
+{
+    require(__DIR__ . '/../common/Autoload.php');
 }
 
 spl_autoload_register(function ($class) {

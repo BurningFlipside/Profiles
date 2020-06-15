@@ -1,5 +1,5 @@
 <?php
-class ProfilesAPI extends Http\Rest\RestAPI
+class ProfilesAPI extends Flipside\Http\Rest\RestAPI
 {
     public function setup($app)
     {
@@ -16,7 +16,7 @@ class ProfilesAPI extends Http\Rest\RestAPI
             $response->getBody()->write('Missing Required Parameters!');
             return $response->withStatus(400);
         }
-        $auth = AuthProvider::getInstance();
+        $auth = Flipside\AuthProvider::getInstance();
         $res = $auth->login($params['username'], $params['password']);
         if($res === false)
         {
@@ -24,7 +24,7 @@ class ProfilesAPI extends Http\Rest\RestAPI
         }
         else
         {
-            $user = \FlipSession::getUser();
+            $user = \Flipside\FlipSession::getUser();
             $privateKey = file_get_contents('/var/www/secure_settings/jwtRS256.key');
             $groups = $user->getGroups();
             if($groups === false)
@@ -57,7 +57,7 @@ class ProfilesAPI extends Http\Rest\RestAPI
 
     public function logout($request, $response)
     {
-        FlipSession::end();
+        \Flipside\FlipSession::end();
         $cookieParams = session_get_cookie_params();
         $response = $response->withHeader('Set-Cookie', 'Flipside_JWT=deleted; expires=Thu, 01-Jan-1970 00:00:01 GMT; Max-Age=0; path=/; domain='.$cookieParams['domain'].'; secure');
         return $response->withJson(true);

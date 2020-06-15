@@ -1,13 +1,12 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-require_once("class.FlipSession.php");
-if(!FlipSession::isLoggedIn())
+require_once('class.ProfilesPage.php');
+if(!\Flipside\FlipSession::isLoggedIn())
 {
     header("Location: login.php");
     exit();
 }
-require_once('class.ProfilesPage.php');
 $page = new ProfilesPage('Burning Flipside Profiles');
 
 $page->addWellKnownJS(JS_BOOTSTRAP_FH);

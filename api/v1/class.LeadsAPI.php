@@ -51,14 +51,14 @@ class LeadsAPI extends ProfilesAdminDataAPI
                 $leadGroup = $auth->getGroupByName('Leads');
                 return $leadGroup->members(true, false);
             default:
-                $filter = new \Data\Filter('ou eq '.$type);
+                $filter = new \Flipside\Data\Filter('ou eq '.$type);
                 return $auth->getUsersByFilter($filter);
         }
     }
 
     protected function getPositionsWithParams($params)
     {
-        $auth = AuthProvider::getInstance();
+        $auth = \Flipside\AuthProvider::getInstance();
         if(isset($params['type']))
         {
             return $this->getPositionsByType($params['type'], $auth);
@@ -81,7 +81,7 @@ class LeadsAPI extends ProfilesAdminDataAPI
         {
             return $response->withStatus(401);
         }
-        $odata = $request->getAttribute('odata', new \ODataParams(array()));
+        $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
         $leads = $this->getPositionsWithParams($request->getQueryParams());
         $leads = $odata->filterArrayPerSelect($leads);
         return $response->withJson($leads);

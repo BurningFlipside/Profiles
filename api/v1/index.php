@@ -13,7 +13,7 @@ require('class.SessionsAPI.php');
 require('class.UsersAPI.php');
 require('class.ProfilesAPI.php');
 
-$site = new \Http\WebSite();
+$site = new \Flipside\Http\WebSite();
 
 $site->registerAPI('/areas', new AreasAPI());
 $site->registerAPI('/groups', new GroupsAPI());

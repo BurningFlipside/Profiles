@@ -1,9 +1,8 @@
 <?php
-require_once("class.FlipSession.php");
+require_once('class.ProfilesPage.php');
 $cookieParams = session_get_cookie_params();
 setcookie('Flipside_JWT', '', time() - 3600, '/', $cookieParams['domain'], true);
-FlipSession::end();
-require_once('class.ProfilesPage.php');
+\Flipside\FlipSession::end();
 $page = new ProfilesPage('Burning Flipside Profiles');
 
 $page->body .= '

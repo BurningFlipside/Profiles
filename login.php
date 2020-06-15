@@ -30,7 +30,7 @@ if(isset($_GET['failed']))
     $page->addNotification('Login Failed! <a href="'.$page->resetUrl.'" class="alert-link">Click here to reset your password.</a>', $page::NOTIFICATION_FAILED);
 }
 
-$auth = \AuthProvider::getInstance();
+$auth = \Flipside\AuthProvider::getInstance();
 $auth_links = $auth->getSupplementaryLinks();
 $auth_links_str = '';
 $count = count($auth_links);

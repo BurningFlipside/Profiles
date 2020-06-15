@@ -1,7 +1,7 @@
 <?php
 require_once('Autoload.php');
 
-class FlipsideProfileEmail extends \Email\Email
+class FlipsideProfileEmail extends \Flipside\Email\Email
 {
     protected $user;
 

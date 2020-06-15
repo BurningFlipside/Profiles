@@ -15,8 +15,8 @@ class GroupsAPI extends ProfilesAdminAPI
         {
             return $response->withStatus(301)->withHeader('Location', '../users/me/groups');
         }
-        $auth = AuthProvider::getInstance();
-        $odata = $request->getAttribute('odata', new \ODataParams(array()));
+        $auth = \Flipside\AuthProvider::getInstance();
+        $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
         $groups = $auth->getGroupsByFilter($odata->filter, $odata->select, $odata->top, $odata->skip, 
                                            $odata->orderby);
         return $response->withJson($groups);
@@ -59,7 +59,7 @@ class GroupsAPI extends ProfilesAdminAPI
 
     public function getGroup($request, $response, $args)
     {
-        $odata = $request->getAttribute('odata', new \ODataParams(array()));
+        $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
         $expand = false;
         $user = $request->getAttribute('user');
         if($user === false)
@@ -68,7 +68,7 @@ class GroupsAPI extends ProfilesAdminAPI
             $remote = $request->getServerParam('REMOTE_ADDR');
             if($local === $remote)
             {
-                $auth = AuthProvider::getInstance();
+                $auth = \Flipside\AuthProvider::getInstance();
                 $group = $auth->getGroupByName($args['name']);
                 $expand = true;
             }
@@ -83,7 +83,7 @@ class GroupsAPI extends ProfilesAdminAPI
         }
         else
         {
-            $auth = AuthProvider::getInstance();
+            $auth = \Flipside\AuthProvider::getInstance();
             $group = $auth->getGroupByName($args['name']);
             $expand = true;
         }
@@ -128,7 +128,7 @@ class GroupsAPI extends ProfilesAdminAPI
 
     public function getAllGroupsAndUsers($keys)
     {
-        $auth = AuthProvider::getInstance();
+        $auth = \Flipside\AuthProvider::getInstance();
         $groups = $auth->getGroupsByFilter(false);
         $res = array();
         $this->serializeArray($res, $groups, $keys, 'Group');
@@ -163,13 +163,13 @@ class GroupsAPI extends ProfilesAdminAPI
     public function getNonMembers($request, $response, $args)
     {
         $this->validateIsAdmin($request);
-        $odata = $request->getAttribute('odata', new \ODataParams(array()));
+        $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
         $keys = false;
         if($odata->select !== false)
         {
             $keys = array_flip($odata->select);
         }
-        $auth = AuthProvider::getInstance();
+        $auth = \Flipside\AuthProvider::getInstance();
         if($args['name'] === 'none')
         {
             $res = $this->getAllGroupsAndUsers($keys);
@@ -188,7 +188,7 @@ class GroupsAPI extends ProfilesAdminAPI
     public function updateGroup($request, $response, $args)
     {
         $this->validateIsAdmin($request);
-        $auth = AuthProvider::getInstance();
+        $auth = \Flipside\AuthProvider::getInstance();
         $group = $auth->getGroupByName($args['name']);
         if($group === false)
         {

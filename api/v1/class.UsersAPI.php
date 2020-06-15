@@ -23,7 +23,7 @@ class UsersAPI extends ProfilesAdminAPI
 
     public function listUsers($request, $response)
     {
-        $odata = $request->getAttribute('odata', new \ODataParams(array()));
+        $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
         if($this->validateIsAdmin($request, true) === false)
         {
             $users = array($this->user);
@@ -31,7 +31,7 @@ class UsersAPI extends ProfilesAdminAPI
         }
         else
         {
-            $auth = AuthProvider::getInstance();
+            $auth = \Flipside\AuthProvider::getInstance();
             $users = $auth->getUsersByFilter($odata->filter, $odata->select, $odata->top, $odata->skip, 
                                              $odata->orderby);
         }
@@ -40,13 +40,13 @@ class UsersAPI extends ProfilesAdminAPI
 
     protected function validateCanCreateUser($proposedUser, $auth, &$message)
     {
-        $user = $auth->getUsersByFilter(new \Data\Filter('mail eq '.$proposedUser['mail']));
+        $user = $auth->getUsersByFilter(new \Flipside\Data\Filter('mail eq '.$proposedUser['mail']));
         if($user !== false && isset($user[0]))
         {
             $message = 'Email already exists!';
             return false;
         }
-        $user = $auth->getUsersByFilter(new \Data\Filter('uid eq '.$proposedUser['uid']));
+        $user = $auth->getUsersByFilter(new \Flipside\Data\Filter('uid eq '.$proposedUser['uid']));
         if($user !== false && isset($user[0]))
         {
             $message = 'Username already exists!';
@@ -138,8 +138,8 @@ class UsersAPI extends ProfilesAdminAPI
         }
         if($this->user->isInGroupNamed('LDAPAdmins') || $this->hasLeadAccess())
         {
-            $auth = \AuthProvider::getInstance();
-            $filter = new \Data\Filter("uid eq $uid");
+            $auth = \Flipside\AuthProvider::getInstance();
+            $filter = new \Flipside\Data\Filter("uid eq $uid");
             $users = $auth->getUsersByFilter($filter);
             if(!empty($users))
             {
@@ -157,8 +157,8 @@ class UsersAPI extends ProfilesAdminAPI
         }
         if($this->user->isInGroupNamed('LDAPAdmins'))
         {
-            $auth = \AuthProvider::getInstance();
-            $filter = new \Data\Filter("uid eq $uid");
+            $auth = \Flipside\AuthProvider::getInstance();
+            $filter = new \Flipside\Data\Filter("uid eq $uid");
             $users = $auth->getUsersByFilter($filter);
             if(!empty($users))
             {
@@ -176,7 +176,7 @@ class UsersAPI extends ProfilesAdminAPI
         {
             if($_SERVER['SERVER_ADDR'] === $_SERVER['REMOTE_ADDR'])
             {
-                $user = \AuthProvider::getInstance()->getUsersByFilter(new \Data\Filter("uid eq $uid"));
+                $user = \Flipside\AuthProvider::getInstance()->getUsersByFilter(new \Data\Filter("uid eq $uid"));
                 if(empty($user))
                 {
                     return $response->withStatus(404);
@@ -211,7 +211,7 @@ class UsersAPI extends ProfilesAdminAPI
             $forwardedFor = $_SERVER['HTTP_X_FORWARDED_FOR'];
         }
         $emailMsg = new PasswordHasBeenResetEmail($user, $_SERVER['REMOTE_ADDR'], $forwardedFor);
-        $emailProvider = EmailProvider::getInstance();
+        $emailProvider = \Flipside\EmailProvider::getInstance();
         if($emailProvider->sendEmail($emailMsg) === false)
         {
             throw new \Exception('Unable to send password reset email!');
@@ -234,7 +234,7 @@ class UsersAPI extends ProfilesAdminAPI
         {
             if(isset($payload['hash']))
             {
-                $auth = AuthProvider::getInstance();
+                $auth = \Flipside\AuthProvider::getInstance();
                 $this->user = $auth->getUserByResetHash($payload['hash']);
                 return $this->user;
             }
@@ -276,7 +276,7 @@ class UsersAPI extends ProfilesAdminAPI
         }
         if($this->userIsMe($request, $uid))
         {
-            \FlipSession::setUser($user);
+            \Flipside\FlipSession::setUser($user);
         }
         if(isset($obj->password))
         {
@@ -299,8 +299,8 @@ class UsersAPI extends ProfilesAdminAPI
         }
         else
         {
-            $auth = AuthProvider::getInstance();
-            $filter = new \Data\Filter("uid eq $uid");
+            $auth = \Flipside\AuthProvider::getInstance();
+            $filter = new \Flipside\Data\Filter("uid eq $uid");
             $user = $auth->getUsersByFilter($filter);
             if(empty($user))
             {
@@ -351,11 +351,11 @@ class UsersAPI extends ProfilesAdminAPI
         if($this->userIsMe($request, $uid))
         {
             $this->user->addLoginProvider($obj->provider);
-            AuthProvider::getInstance()->impersonateUser($this->user);
+            \Flipside\AuthProvider::getInstance()->impersonateUser($this->user);
         }
         else if($this->user->isInGroupNamed("LDAPAdmins"))
         {
-            $user = AuthProvider::getInstance()->getUser($uid);
+            $user = \Flipside\AuthProvider::getInstance()->getUser($uid);
             if($user === false)
             {
                 return $response->withStatus(404);
@@ -371,7 +371,7 @@ class UsersAPI extends ProfilesAdminAPI
 
     protected function getAllUsersByFilter($filter, &$pending)
     {
-        $auth = AuthProvider::getInstance();
+        $auth = \Flipside\AuthProvider::getInstance();
         $user = $auth->getUsersByFilter($filter);
         if(!empty($user))
         {
@@ -419,7 +419,7 @@ class UsersAPI extends ProfilesAdminAPI
             $to_delete = substr($email, $begining, $end - $begining);
             $email = str_replace($to_delete, '', $email);
         }
-        $filter = new \Data\Filter('mail eq '.$email);
+        $filter = new \Flipside\Data\Filter('mail eq '.$email);
         $pending = false;
         $user = $this->getAllUsersByFilter($filter, $pending);
         if($user === false)
@@ -453,7 +453,7 @@ class UsersAPI extends ProfilesAdminAPI
         {
             return $response->withJson(false);
         }
-        $filter = new \Data\Filter('uid eq '.$uid);
+        $filter = new \Flipside\Data\Filter('uid eq '.$uid);
         $pending = false;
         $user = $this->getAllUsersByFilter($filter, $pending);
         if($user === false)
@@ -474,7 +474,7 @@ class UsersAPI extends ProfilesAdminAPI
         {
             return $response->withStatus(400);
         }
-        $auth = AuthProvider::getInstance();
+        $auth = \Flipside\AuthProvider::getInstance();
         $users = $auth->getUsersByFilter(new \Data\Filter('uid eq '.$uid));
         if(empty($users))
         {
@@ -497,8 +497,8 @@ class UsersAPI extends ProfilesAdminAPI
             return $response->withStatus(401);
         }
         $uid = $args['uid'];
-        $auth = \AuthProvider::getInstance();
-        $filter = new \Data\Filter("uid eq $uid");
+        $auth = \Flipside\AuthProvider::getInstance();
+        $filter = new \Flipside\Data\Filter("uid eq $uid");
         $users = $auth->getUsersByFilter($filter);
         if(empty($users))
         {
@@ -560,14 +560,14 @@ class UsersAPI extends ProfilesAdminAPI
         {
             return $response->withStatus(400);
         }
-        $auth = AuthProvider::getInstance();
-        $users = $auth->getUsersByFilter(new \Data\Filter('mail eq '.$email));
+        $auth = \Flipside\AuthProvider::getInstance();
+        $users = $auth->getUsersByFilter(new \Flipside\Data\Filter('mail eq '.$email));
         if(empty($users))
         {
             return $response->withStatus(404);
         }
         $email_msg = new UIDForgotEmail($users[0]);
-        $email_provider = EmailProvider::getInstance();
+        $email_provider = \Flipside\EmailProvider::getInstance();
         if($email_provider->sendEmail($email_msg) === false)
         {
             throw new \Exception('Unable to send email!');
