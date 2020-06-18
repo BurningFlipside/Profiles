@@ -21,8 +21,8 @@ $page = new ProfilesPage('Burning Flipside Profiles Registration');
 $page->addJS('/js/zxcvbn-async.js');
 $page->addJS('js/register.js');
 
-$captcha = new FlipsideCAPTCHA();
-FlipSession::setVar('captcha', $captcha);
+$captcha = new \Flipside\FlipsideCAPTCHA();
+\Flipside\FlipSession::setVar('captcha', $captcha);
 
 if(isset($_GET['return']))
 {
@@ -33,7 +33,7 @@ else
     $return = '';
 }
 
-if(FlipSession::isLoggedIn())
+if(\Flipside\FlipSession::isLoggedIn())
 {
     $page->addNotification('You are currently logged in to the system. Are you sure you want to register another account?');
 }
