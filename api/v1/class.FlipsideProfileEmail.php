@@ -1,5 +1,5 @@
 <?php
-require_once('Autoload.php');
+require_once(__DIR__ . '/../../Autoload.php');
 
 class FlipsideProfileEmail extends \Flipside\Email\Email
 {

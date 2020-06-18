@@ -2,7 +2,7 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-require('Autoload.php');
+require(__DIR__ . '/../../Autoload.php');
 require('class.ProfilesAdminAPI.php');
 require('class.ProfilesAdminDataAPI.php');
 require('class.AreasAPI.php');
