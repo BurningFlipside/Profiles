@@ -7,9 +7,8 @@ function allow_delete()
 function really_really_delete_user()
 {
     $.ajax({
-        url: '/ajax/user.php',
-        data: 'action=delete',
-        type: 'post',
+        url: '/api/v1/users/me',
+        type: 'delete',
         dataType: 'json',
         success: delete_done
     });
