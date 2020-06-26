@@ -1,2 +1,6 @@
 vendor/
+node_modules/
+cypress/screenshots
+cypress/videos
 composer.lock
+package-lock.json
