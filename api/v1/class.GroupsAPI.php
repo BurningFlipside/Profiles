@@ -7,6 +7,7 @@ class GroupsAPI extends ProfilesAdminAPI
         $app->get('/{name}[/]', array($this, 'getGroup'));
         $app->patch('/{name}[/]', array($this, 'updateGroup'));
         $app->get('/{name}/non-members', array($this, 'getNonMembers'));
+        $app->post('[/]', array($this, 'createGroup'));
     }
 
     public function getGroups($request, $response)
@@ -20,6 +21,15 @@ class GroupsAPI extends ProfilesAdminAPI
         $groups = $auth->getGroupsByFilter($odata->filter, $odata->select, $odata->top, $odata->skip, 
                                            $odata->orderby);
         return $response->withJson($groups);
+    }
+
+    public function createGroup($request, $response)
+    {
+        $this->validateIsAdmin($request);
+        $obj = $request->getParsedBody();
+        $auth = \Flipside\AuthProvider::getInstance();
+        $res = $auth->createGroup($obj);
+        return $response->withJson($res);
     }
 
     private function expandGroupMembers($group, $odata, $directOnly)
@@ -118,7 +128,7 @@ class GroupsAPI extends ProfilesAdminAPI
             {
                 $tmp['type'] = $type;
             }
-            if($keys !== false)
+            if($keys !== false && $tmp['type'] === 'User')
             {
                 $tmp = array_intersect_key($tmp, $keys);
             }
@@ -139,7 +149,7 @@ class GroupsAPI extends ProfilesAdminAPI
 
     public function getTypeOfEntity($entity)
     {
-        if(is_subclass_of($entity, 'Auth\Group'))
+        if(is_subclass_of($entity, 'Flipside\Auth\Group'))
         {
             return 'Group';
         }

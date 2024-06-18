@@ -59,6 +59,14 @@ function removeEmail(email) {
 });
 }
 
+function retryGravatar() {
+  if(CryptoJS !== undefined) {
+    $('#gravatar').append('If no profile photo is set. Your <a href="http://www.gravatar.com">Gravatar</a> image will be used instead<br/><img src="//www.gravatar.com/avatar/'+CryptoJS.MD5(json.mail.toLowerCase())+'?d=identicon" style="width:64px; height: 64px;"/>');
+  } else {
+    setTimeout(retryGravatar, 100);
+  }
+}
+
 function finish_populate_form(jqXHR, textStatus)
 {
     if(textStatus === 'success')
@@ -74,6 +82,7 @@ function finish_populate_form(jqXHR, textStatus)
         setIfValid(json, 'postalAddress');
         setIfValid(json, 'postalCode');
         setIfValid(json, 'l');
+        /*
         if(json.jpegPhoto != undefined && json.jpegPhoto.length > 0)
         {
             var img = new Image();
@@ -85,8 +94,12 @@ function finish_populate_form(jqXHR, textStatus)
         else
         {
             //Use gravatar
-            $('#gravatar').append('If no profile photo is set. Your <a href="http://www.gravatar.com">Gravatar</a> image will be used instead<br/><img src="//www.gravatar.com/avatar/'+CryptoJS.MD5(json.mail.toLowerCase())+'?d=identicon" style="width:64px; height: 64px;"/>');
-        }
+            if(CryptoJS !== undefined) {
+                $('#gravatar').append('If no profile photo is set. Your <a href="http://www.gravatar.com">Gravatar</a> image will be used instead<br/><img src="//www.gravatar.com/avatar/'+CryptoJS.MD5(json.mail.toLowerCase())+'?d=identicon" style="width:64px; height: 64px;"/>');
+            } else {
+                setTimeout(retryGravatar, 100);
+            }
+        }*/
         if(json.c != undefined && json.c.length > 0)
         {
             $('#c').val(json.c);

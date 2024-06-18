@@ -12,7 +12,7 @@ if(!isset($_GET['hash']))
 }
 else
 {
-    $auth = AuthProvider::getInstance();
+    $auth = \Flipside\AuthProvider::getInstance();
     $user = $auth->getTempUserByHash($_GET['hash']);
     if($user === false)
     {
@@ -22,7 +22,7 @@ else
     {
         if($auth->activatePendingUser($user) === false)
         {
-            $page->addNotification("Internal Error! ".$server->lastError(), $page::NOTIFICATION_FAILED);
+            $page->addNotification("Internal Error!", $page::NOTIFICATION_FAILED);
         }
         else
         {

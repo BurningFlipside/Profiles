@@ -99,14 +99,14 @@ $page->body.='
             <div class="col-sm-10">
                 <select class="form-control bfh-states" data-country="c" id="st" name="st" type="text"></select>
             </div>
-            <div class="w-100"></div>
+            <!--<div class="w-100"></div>
             <label for="jpegPhotoBtn" class="col-sm-2 control-label">Profile Photo:</label>
             <div class="col-sm-4">
                 <input class="form-control" id="jpegPhotoBtn" name="jpegPhotoBtn" type="file" accept="image/*"/>
             </div>
             <div class="col-sm-4">
                 <div id="gravatar"></div>
-            </div>
+            </div>-->
         </div>
         <div class="clearfix visible-md visible-lg"></div>
         <div class="col-sm-2">

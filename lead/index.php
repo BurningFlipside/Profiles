@@ -11,22 +11,22 @@ $afGroup   = $auth->getGroupByName('AFs');
 $ccGroup   = $auth->getGroupByName('CC');
 
 $lead_count = 0;
-if($leadGroup !== false)
+if($leadGroup !== null)
 {
     $lead_count = $leadGroup->member_count();
 }
 $aar_count = 0;
-if($aarGroup !== false)
+if($aarGroup !== null)
 {
     $aar_count  = $aarGroup->member_count();
 }
 $af_count = 0;
-if($afGroup !== false)
+if($afGroup !== null)
 {
     $af_count   = $afGroup->member_count();
 }
 $cc_count = 0;
-if($ccGroup !== false)
+if($ccGroup !== null)
 {
     $cc_count   = $ccGroup->member_count();
 }

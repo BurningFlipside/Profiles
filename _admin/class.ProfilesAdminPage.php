@@ -4,7 +4,7 @@ class ProfilesAdminPage extends \Flipside\Http\FlipAdminPage
 {
     public function __construct($title)
     {
-        parent::__construct($title, 'LDAPAdmins');
+        parent::__construct($title, 'ProfileAdmins');
         $this->addJS('js/admin.js');
 
         $users_menu = array(

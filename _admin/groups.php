@@ -3,8 +3,8 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 require_once('class.ProfilesAdminPage.php');
 $page = new ProfilesAdminPage('Burning Flipside Profiles - Admin');
-$page->addWellKnownJS(JS_DATATABLE, false);
-$page->addWellKnownCSS(CSS_DATATABLE);
+$page->addJS('//unpkg.com/tabulator-tables@6.2.1/dist/js/tabulator.min.js');
+$page->addCSS('//unpkg.com/tabulator-tables@6.2.1/dist/css/tabulator.min.css');
 
 $page->body .= '
 <div class="col-lg-12">
@@ -17,7 +17,7 @@ $page->body .= '
       <option value="del">Delete Group</option>
       <option value="new">Add New Group...</option>
     </select>
-    <button class="btn btn-primary col-sm-1" type="button" onclick="groupExecute()">Apply</button>
+    <button class="btn btn-primary col-sm-1" type="button" id="groupExecute">Apply</button>
   </div>
   <table id="group_table">
     <thead>

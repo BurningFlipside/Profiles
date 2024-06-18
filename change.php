@@ -11,7 +11,7 @@ if(strpos($_SERVER['REQUEST_URI'], '//') !== false)
 
 require_once('class.ProfilesPage.php');
 $page = new ProfilesPage('Burning Flipside Password Change');
-$auth = AuthProvider::getInstance();
+$auth = \Flipside\AuthProvider::getInstance();
 $require_current_pass = true;
 $user = $page->user;
 if($user === false || $user === null)

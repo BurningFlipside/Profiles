@@ -15,8 +15,8 @@ if(strpos($_SERVER['REQUEST_URI'], '//') !== false)
     exit();
 }
 
-require_once('FlipsideCAPTCHA.php');
 require_once('class.ProfilesPage.php');
+require_once('FlipsideCAPTCHA.php');
 $page = new ProfilesPage('Burning Flipside Profiles Registration');
 $page->addJS('/js/zxcvbn-async.js');
 $page->addJS('js/register.js');

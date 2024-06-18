@@ -25,23 +25,19 @@ class ProfilesAPI extends Flipside\Http\Rest\RestAPI
         else
         {
             $user = \Flipside\FlipSession::getUser();
+            /*
             $privateKey = file_get_contents('/var/www/secure_settings/jwtRS256.key');
-            $groups = $user->getGroups();
-            if($groups === false)
-            {
-                $groups = array();
-            }
-            $count = count($groups);
-            for($i = 0; $i < $count; $i++)
-            {
-                $groups[$i] = $groups[$i]->getGroupName();
-            }
             $token = array(
                 'iss' => $request->getUri()->getHost(),
                 'sub' => $user->uid,
                 'private' => array('Flipside'=>array(
                     'email'=>$user->mail,
-                    'groups'=>$groups,
+                    'menuitems'=>array(
+                        'profiles'=>array(
+                          'Leads'=>'/Leads',
+                          'Admin'=>'/Admin'
+                        )
+                    ),
                     'sessionIDs'=> array(
                         'php'=>session_id()
                         )
@@ -50,7 +46,7 @@ class ProfilesAPI extends Flipside\Http\Rest\RestAPI
             );
             $cookieParams = session_get_cookie_params();
             $jwt = \Firebase\JWT\JWT::encode($token, $privateKey, 'RS256');
-            $response = $response->withHeader('Set-Cookie', 'Flipside_JWT='.$jwt.'; path=/; domain='.$cookieParams['domain'].'; secure');
+            $response = $response->withHeader('Set-Cookie', 'Flipside_JWT='.$jwt.'; path=/; domain='.$cookieParams['domain'].'; secure');*/
             return $response->withJson($res);
         }
     }

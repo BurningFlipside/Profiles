@@ -102,7 +102,12 @@ function gotUserList(jqXHR)
     return;
   }
   var cache = {users: jqXHR.responseJSON, time: Date.now()};
-  window.localStorage.setItem('FlipsideUserCache', JSON.stringify(cache));
+  try {
+    window.localStorage.setItem('FlipsideUserCache', JSON.stringify(cache));
+  } catch(e) {
+    //Couldn't save to cache... oh well, this person is just a bit slower...
+    console.log(e);
+  }
   populateTableFromArray(jqXHR.responseJSON);
 }
 

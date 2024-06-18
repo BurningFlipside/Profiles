@@ -4,8 +4,8 @@ error_reporting(E_ALL);
 require_once('class.ProfilesAdminPage.php');
 $page = new ProfilesAdminPage('Burning Flipside Profiles - Admin');
 
-$page->addWellKnownJS(JS_DATATABLE);
-$page->addWellKnownCSS(CSS_DATATABLE);
+$page->addJS('//unpkg.com/tabulator-tables@6.2.1/dist/js/tabulator.min.js');
+$page->addCSS('//unpkg.com/tabulator-tables@6.2.1/dist/css/tabulator.min.css');
 
 $hidden = '';
 if(!isset($_GET['gid']))

@@ -1,34 +1,52 @@
-var times = 0;
+let times = 0;
 
-function clear_konami()
-{
-    $('#konami').remove();
-    times++;
+function clearKonami() {
+  document.getElementById('content').removeChild(document.getElementById('konami'));
+  times++;
 }
 
-function konami()
-{
-    var marquee = $('<marquee/>', {behavior: 'slide', direction: 'left', id: 'konami'});
-    var img = $('<img/>', {src: '/img/common/logo.svg'});
-    if(times >= 1)
-    {
-        marquee.append("Here we go again...");
-    }
-    img.appendTo(marquee);
-    var audio = $('<audio/>', {autoplay: true});
-    $('<source/>', {src: '/media/contra.ogg', type: 'audio/ogg'}).appendTo(audio);
-    audio.appendTo(marquee);
-    marquee.appendTo($('#content'));
-    setTimeout(clear_konami, 5000);
+function konami() {
+  let marqueeDiv = document.createElement('div');
+  marqueeDiv.id = 'konami';
+  let img = document.createElement('img');
+  img.src = '/img/common/logo.svg';
+  img.style.animation = 'marquee 5s linear infinite';
+  img.style.paddingLeft = '100%';
+  img.style.display = 'inline-block';
+  marqueeDiv.appendChild(img);
+  if(times >= 1) {
+    let text = document.createTextNode('Here we go again...');
+    marqueeDiv.appendChild(text);
+  }
+  marqueeDiv.style.width = '100%';
+  let audio = document.createElement('audio');
+  audio.autoplay = true;
+  let source = document.createElement('source');
+  source.src = '/media/contra.ogg';
+  source.type = 'audio/ogg';
+  audio.appendChild(source);
+  marqueeDiv.appendChild(audio);
+  document.getElementById('content').appendChild(marqueeDiv);
+  img.animate([
+    {transform: 'translateX(0)'},
+    {transform: 'translateX(-50%)'}
+  ], {
+    duration: 5000
+  });
+  setTimeout(clearKonami, 5000);
 }
 
 function pageInit() {
-  if(window.cheet === undefined) {
-    //Wait for the cheet script to load...
-    setTimeout(pageInit, 100);
-    return;
-  }
   cheet('up up down down left right left right b a', konami);
 }
 
-$(pageInit);
+function retryPageInit() {
+  if(window.cheet === undefined) {
+    //Wait for the cheet script to load...
+    setTimeout(retryPageInit, 100);
+    return;
+  }
+  pageInit();
+}
+
+window.onload = retryPageInit;

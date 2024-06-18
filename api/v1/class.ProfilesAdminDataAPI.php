@@ -8,7 +8,7 @@ class ProfilesAdminDataAPI extends Flipside\Http\Rest\DataTableAPI
         {
             throw new Exception('Must be logged in', \Flipside\Http\Rest\ACCESS_DENIED);
         }
-        if(!$user->isInGroupNamed('LDAPAdmins'))
+        if(!$user->isInGroupNamed('ProfileAdmins'))
         {
             throw new Exception('Must be Admin', \Flipside\Http\Rest\ACCESS_DENIED);
         }

@@ -6,8 +6,8 @@ $now->modify('-1 day');
 $now->setTime(0, 0);
 $yesterday = date("Y-m-d H:i:s", $now->getTimestamp());
 
-$auth = \AuthProvider::getInstance();
-$filter = new \Data\Filter("time lt '$yesterday'");
+$auth = \Flipside\AuthProvider::getInstance();
+$filter = new \Flipside\Data\Filter("time lt '$yesterday'");
 $users = $auth->getPendingUsersByFilter($filter);
 $count = count($users);
 for($i = 0; $i < $count; $i++)

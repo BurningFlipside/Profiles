@@ -19,7 +19,7 @@ class PasswordResetEmail extends FlipsideProfileEmail
 
     protected function getResetLink()
     {
-        $settings = \Settings::getInstance();
+        $settings = \Flipside\Settings::getInstance();
         $profilesUrl = $settings->getGlobalSetting('profiles_url', 'https://profiles.burningflipside.com');
         return $profilesUrl.'/change.php?hash='.$this->hash;
     }

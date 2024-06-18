@@ -5,7 +5,7 @@ require_once('class.ProfilesPage.php');
 $page = new ProfilesPage('Burning Flipside Profiles');
 $page->addJS('js/user_exists.js');
 
-$auth = AuthProvider::getInstance();
+$auth = \Flipside\AuthProvider::getInstance();
 $email = false;
 if(!isset($_GET['src']))
 {

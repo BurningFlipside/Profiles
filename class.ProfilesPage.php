@@ -26,7 +26,7 @@ class ProfilesPage extends \Flipside\Http\WebPage
     {
         if($this->user !== false && $this->user !== null)
         {
-            if($this->user->isInGroupNamed('LDAPAdmins') || $this->user->isInGroupNamed('AFs'))
+            if($this->user->isInGroupNamed('ProfileAdmins'))
             {
                 $this->addLink('Admin', $this->profiles_root.'/_admin/index.php');
             }

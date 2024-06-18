@@ -1,10 +1,12 @@
 var aarMembers = [
-  'Adam',
   'Cooper',
-//  'Izzi',
   'Kat',
   'Problem',
-  'Tim'
+  'Tim',
+  'Mercedes',
+  'Shortcake',
+  'Susan',
+  'Christie'
 ];
 
 function getPrevious(id) {
@@ -129,10 +131,10 @@ function updateAllDropdowns() {
         disableValues(a, b, f, fa, backup[i+1]);
       }
       if(fuckoff[i+1] !== '') {
-        disableValues(a, [], f, fa, fuckoff[i+1]);
+        disableValues(a, b, f, fa, fuckoff[i+1]);
       }
       if(fuckoffa[i+1] !== '') {
-        disableValues(a, [], f, fa, fuckoffa[i+1]);
+        disableValues(a, b, f, fa, fuckoffa[i+1]);
       }
     }
     if(actual[i] !== '') {
@@ -274,14 +276,14 @@ function changeFuck(e) {
   updateAllDropdowns();
 }
 
-function initInput(index, element) {
-  element.append(new Option('', ''));
+function initInput(element) {
+  element.add(new Option('', ''));
   for(var i = 0; i < aarMembers.length; i++) {
-    element.append(new Option(aarMembers[i], aarMembers[i]));
+    element.add(new Option(aarMembers[i], aarMembers[i]));
   }
 }
 
-function initSummary(index, element) {
+function initSummary(element) {
   for(var i = 0; i < aarMembers.length; i++) {
     var row = element.insertRow();
     var name = document.createElement('th');
@@ -330,17 +332,32 @@ function repopulate(year) {
 }
 
 function initPage() {
-  $('.actual').css('background', 'red');
-  $('.backup').css('background', 'yellow');
-  $('.fuck').css('background', 'green');
-  $('select').each(initInput);
-  $('#summary').each(initSummary);
-  $('.actual').change(changeActual);
-  $('.backup').change(changeBackup);
-  $('.fuck').change(changeFuck);
+  let actualDropDowns = document.getElementsByClassName('actual');
+  for(let i = 0; i < actualDropDowns.length; i++) {
+    let actualDropDown = actualDropDowns[i];
+    actualDropDown.style.background = 'red';
+    initInput(actualDropDown);
+    actualDropDown.addEventListener('change', changeActual);
+  }
+  let backupDropDowns = document.getElementsByClassName('backup');
+  for(let i = 0; i < backupDropDowns.length; i++) {
+    let backupDropDown = backupDropDowns[i];
+    backupDropDown.style.background = 'yellow';
+    initInput(backupDropDown);
+    backupDropDown.addEventListener('change', changeBackup);
+  }
+  let fuckDropDowns = document.getElementsByClassName('fuck');
+  for(let i = 0; i < fuckDropDowns.length; i++) {
+    let fuckDropDown = fuckDropDowns[i];
+    fuckDropDown.style.background = 'green';
+    initInput(fuckDropDown);
+    fuckDropDown.addEventListener('change', changeFuck);
+  }
+  let summaryTable = document.getElementById('summary');
+  initSummary(summaryTable);
   var url = new URL(location.href);
   var params = new URLSearchParams(url.search.slice(1));
   params.forEach(processParam);
 }
 
-$(initPage)
+window.onload = initPage;

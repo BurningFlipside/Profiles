@@ -5,6 +5,8 @@ require_once('class.ProfilesAdminPage.php');
 $page = new ProfilesAdminPage('Burning Flipside Profiles - Admin');
 $page->addWellKnownJS(JS_DATATABLE, false);
 $page->addWellKnownCSS(CSS_DATATABLE);
+$page->addJS('//unpkg.com/tabulator-tables@6.2.1/dist/js/tabulator.min.js');
+$page->addCSS('//unpkg.com/tabulator-tables@6.2.1/dist/css/tabulator.min.css');
 $page->addJS('js/pending_users.js');
 
 $page->body .= '
@@ -21,7 +23,7 @@ $page->body .= '
   </div>
   <table id="pending_table" class="table">
     <thead>
-      <th>User Name</th>
+      <th>Username</th>
       <th>Email</th>
       <th>Registration Time</th>
     </thead>

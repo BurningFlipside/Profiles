@@ -14,7 +14,7 @@ $page = new ProfilesAdminPage('Burning Flipside Profiles - Admin');
     <div class="form-group">
         <label class="col-sm-2 control-label">Area:</label>
         <div class="col-sm-10">
-            <select class="form-control" id="area_select" onchange="area_change(this)">
+            <select class="form-control" id="area_select">
                 <option></option>
                 <option value="_new">New...</option>
             </select>

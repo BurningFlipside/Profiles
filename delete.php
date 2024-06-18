@@ -1,7 +1,7 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-require_once("FlipSession.php");
+require_once('class.ProfilesPage.php');
 if(!\Flipside\FlipSession::isLoggedIn())
 {
     header("Location: login.php");

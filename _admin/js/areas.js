@@ -1,81 +1,83 @@
-function area_change(control)
-{
-    var val = $(control).val();
-    if(val != '')
-    {
-        $('#area_details').show();
-        $('#submit').unbind('click');
+function areaChange(control) {
+    let value = control.options[control.selectedIndex].value;
+    if(value != '') {
+        document.getElementById('area_details').style.display = 'block';
+        let submit = document.getElementById('submit');
+        let areaName = document.getElementById('area_name');
+        submit.removeEventListener('click');
 
-        if(val == '_new')
-        {
-            $('#submit').on('click', add_area);
-            $('#area_name').html("New Area");
-        }
-        else
-        {
-            $('#submit').on('click', update_area);
-            $('#area_name').html(val);
-            var area = $('#area_select :selected').data('area');
-            $('#short_name').val(area.short_name);
-            $('#name').val(area.name);
+        if(value == '_new') {
+            submit.addEventListener('click', addArea);
+            areaName.innerHTML = 'New Area';
+        } else {
+            submit.addEventListener('click', updateArea);
+            areaName.innerHTML = value;
+            let option = control.options[control.selectedIndex];
+            let area = JSON.parse(option.getAttribute('data-area'));
+            document.getElementById('short_name').value = area.short_name;
+            document.getElementById('name').value = area.name;
         }
     }
 }
 
-function areas_done(data)
-{
-    for(var i = 0; i < data.length; i++)
-    {
-        var opt = $('<option/>', {value: data[i].short_name}).html(data[i].name);
-        opt.appendTo($('#area_select'));
-        opt.data('area', data[i]);
+function areasDone(data) {
+    let areaSelect = document.getElementById('area_select');
+    areaSelect.addEventListener("change", () => {areaChange(areaSelect)});
+    for(let i = 0; i < data.length; i++) {
+        let option = new Option(data[i].name, data[i].short_name);
+        option.setAttribute('data-area', JSON.stringify(data[i]));
+        areaSelect.add(option);
     }
 }
 
-function areas_post_done()
-{
-    location.reload();
-}
-
-function form_vars()
-{
+function formVars() {
     return {
-        short_name: $('#short_name').val(),
-        name: $('#name').val()
+        short_name: document.getElementById('short_name').value,
+        name: document.getElementById('name').value
     };
 }
 
-function add_area()
-{
-    $.ajax({
-        url: '../api/v1/areas',
-        contentType: 'application/json',
-        data: JSON.stringify(form_vars()),
-        type: 'POST',
-        processData: false,
-        dataType: 'json',
-        success: areas_post_done});
+function addArea() {
+    fetch('../api/v1/areas', {
+        method: 'POST',
+        body: JSON.stringify(formVars()),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then((response) => {
+        if(!response.ok) {
+            alert('Unable to create area!');
+            return;
+        }
+        location.reload();
+    });
 }
 
-function update_area()
-{
-    $.ajax({
-        url: '../api/v1/areas/'+$('#area_name').html(),
-        contentType: 'application/json',
-        data: JSON.stringify(form_vars()),
-        type: 'PATCH',
-        processData: false,
-        dataType: 'json',
-        success: areas_post_done});
+function updateArea() {
+    let areaName = document.getElementById('area_name').innerHTML;
+    fetch('../api/v1/areas/'+areaName, {
+        method: 'PATCH',
+        body: JSON.stringify(formVars()),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then((response) => {
+        if(!response.ok) {
+            alert('Unable to update area!');
+            return;
+        }
+        location.reload();
+    });
 }
 
-function init_page()
-{
-    $.ajax({
-        url: '../api/v1/areas',
-        type: 'get',
-        dataType: 'json',
-        success: areas_done});
+function initPage() {
+    fetch('../api/v1/areas').then((response) => {
+        if(response.ok) {
+            response.json().then((data) => {
+                areasDone(data);
+            });
+        }
+    });
 }
 
-$(init_page);
+window.onload = initPage;

@@ -12,8 +12,8 @@ class PendingUserAPI extends ProfilesAdminAPI
     public function listPendingUsers($request, $response)
     {
         $this->validateIsAdmin($request);
-        $odata = $request->getAttribute('odata', new \ODataParams(array()));
-        $auth = AuthProvider::getInstance();
+        $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
+        $auth = \Flipside\AuthProvider::getInstance();
         $users = $auth->getPendingUsersByFilter($odata->filter, $odata->select, $odata->top, $odata->skip, 
                                                 $odata->orderby);
         return $response->withJson($users);
@@ -22,7 +22,7 @@ class PendingUserAPI extends ProfilesAdminAPI
     public function showPendingUser($request, $response, $args)
     {
         $this->validateIsAdmin($request);
-        $user = \AuthProvider::getInstance()->getPendingUsersByFilter(new \Data\Filter("hash eq '".$args['hash']."'"));
+        $user = \Flipside\AuthProvider::getInstance()->getPendingUsersByFilter(new \Flipside\Data\Filter("hash eq '".$args['hash']."'"));
         if($user === false)
         {
             return $response->withStatus(404);
@@ -37,8 +37,8 @@ class PendingUserAPI extends ProfilesAdminAPI
     public function deletePendingUser($request, $response, $args)
     {
         $this->validateIsAdmin($request);
-        $auth = \AuthProvider::getInstance();
-        $res = $auth->deletePendingUsersByFilter(new \Data\Filter("hash eq '".$args['hash']."'"));
+        $auth = \Flipside\AuthProvider::getInstance();
+        $res = $auth->deletePendingUsersByFilter(new \Flipside\Data\Filter("hash eq '".$args['hash']."'"));
         return $response->withJson($res);
     }
 
@@ -48,10 +48,10 @@ class PendingUserAPI extends ProfilesAdminAPI
         $user = $request->getAttribute('user');
         if($user === false)
         {
-            throw new Exception('Must be logged in', \Http\Rest\ACCESS_DENIED);
+            throw new Exception('Must be logged in', \Flipside\Http\Rest\ACCESS_DENIED);
         }
-        $auth = \AuthProvider::getInstance();
-        $user = $auth->getPendingUsersByFilter(new \Data\Filter("hash eq '$hash'"));
+        $auth = \Flipside\AuthProvider::getInstance();
+        $user = $auth->getPendingUsersByFilter(new \Flipside\Data\Filter("hash eq '$hash'"));
         if($user === false || !isset($user[0]))
         {
             return $response->withStatus(404);

@@ -1,119 +1,116 @@
-function area_change()
-{
-    $.ajax({
-        url: '../api/v1/areas/'+$('#area_select').val()+'/leads',
-        type: 'get',
-        dataType: 'json',
-        success: leads_done});
-}
-
-function lead_change(control)
-{
-    var val = $(control).val();
-    if(val != '')
-    {
-        $('#lead_details').show();
-        $('#submit').unbind('click');
-
-        if(val == '_new')
-        {
-            $('#submit').on('click', add_lead);
-            $('#lead_name').html("New Lead");
-            $('#short_name').val('');
-            $('#name').val('');
+function areaChange() {
+    let areaSelect = document.getElementById('area_select');
+    fetch('../api/v1/areas/'+areaSelect.value+'/leads').then((response) => {
+        if(!response.ok) {
+            alert('Unable to get leads for selected area!');
+            return;
         }
-        else
-        {
-            $('#submit').on('click', update_lead);
-            $('#lead_name').html(val);
-            var lead = $('#lead_select :selected').data('lead');
-            $('#short_name').val(lead.short_name);
-            $('#name').val(lead.name);
+        response.json().then((data) => {
+            leadsDone(data);
+        })
+    });
+}
+
+function leadChange(control) {
+    let value = control.value;
+    if(value != '') {
+        document.getElementById('lead_details').style.display = 'block';
+        let submit = document.getElementById('submit');
+        let leadName = document.getElementById('lead_name');
+        let shortName = document.getElementById('short_name');
+        let name = document.getElementById('name');
+        submit.removeEventListener('click');
+        if(value == '_new') {
+            submit.addEventListener('click', addLead);
+            leadName.innerHTML = 'New Lead';
+            shortName.value = '';
+            name.value = '';
+        } else {
+            submit.addEventListener('click', updateLead);
+            let option = control.options[control.selectedIndex];
+            let lead = JSON.parse(option.getAttribute('data-lead'));
+            leadName.innerHTML = lead.name;
+            shortName.value = lead.short_name;
+            name.value = lead.name;
         }
     }
 }
 
-function leads_done(data)
-{
-    $('#lead_select').empty();
-    var opt = $('<option/>', {value: ''});
-    opt.appendTo($('#lead_select'));
-    opt = $('<option/>', {value: '_new'}).html('New...');
-    opt.appendTo($('#lead_select'));
-    for(var i = 0; i < data.length; i++)
-    {
-        opt = $('<option/>', {value: data[i].short_name}).html(data[i].name);
-        opt.appendTo($('#lead_select'));
-        opt.data('lead', data[i]);
+function leadsDone(data) {
+    let leadSelect = document.getElementById('lead_select');
+    leadSelect.options.length = 0;
+    let option = new Option('', '');
+    leadSelect.add(option);
+    option = new Option('New...', '_new');
+    leadSelect.add(option);
+    for(let i = 0; i < data.length; i++) {
+        option = new Option(data[i].name, data[i].short_name);
+        option.setAttribute('data-lead', JSON.stringify(data[i]));
+        leadSelect.add(option);
     }
 }
 
-function areas_done(data)
-{
-    for(var i = 0; i < data.length; i++)
-    {
-        var opt = $('<option/>', {value: data[i].short_name}).html(data[i].name);
-        opt.appendTo($('#area_select'));
-        opt.data('area', data[i]);
+function areasDone(data) {
+    let areaSelect = document.getElementById('area_select');
+    for(let i = 0; i < data.length; i++) {
+        let option = new Option(data[i].name, data[i].short_name);
+        areaSelect.add(option);
     }
-    $.ajax({
-        url: '../api/v1/areas/'+$('#area_select').val()+'/leads',
-        type: 'get',
-        dataType: 'json',
-        success: leads_done});
+    areaSelect.addEventListener('change', areaChange);
+    areaChange();
 }
 
-function leads_post_done(data)
-{
-    if(data.success !== undefined)
-    {
-        location.reload();
-    }
-    else
-    {
-        alert(data.error);
-    }
-}
-
-function form_vars(){
+function formVars() {
     return {
-        short_name: $('#short_name').val(),
-        name: $('#name').val(),
-        area: $('#area_select').val()
+        short_name: document.getElementById('short_name').value,
+        name: document.getElementById('name').value,
+        area: document.getElementById('area_select').value
     };
 }
 
-function add_lead()
-{
-    $.ajax({
-        url: '../api/v1/leads',
-        contentType: 'application/json',
-        data: JSON.stringify(form_vars()),
-        type: 'POST',
-        processData: false,
-        dataType: 'json',
-        success: leads_post_done});
+function addLead() {
+    fetch('../api/v1/leads', {
+        method: 'POST',
+        body: JSON.stringify(formVars()),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then((response) => {
+        if(!response.ok) {
+            alert('Unable to create lead!');
+            return;
+        }
+        location.reload();
+    });
 }
 
-function update_lead()
-{
-    $.ajax({
-        url: '../api/v1/leads/'+$('#lead_name').html(),
-        contentType: 'application/json',
-        data: JSON.stringify(form_vars()),
-        type: 'PATCH',
-        processData: false,
-        dataType: 'json',
-        success: leads_post_done});
+function updateLead() {
+    let leadShortId = document.getElementById('short_name').value;
+    fetch('../api/v1/leads/'+leadShortId, {
+       method: 'PATCH',
+       body: JSON.stringify(formVars()),
+       headers: {
+           'Content-Type': 'application/json'
+       } 
+    }).then((response) => {
+        if(!response.ok) {
+            alert('Unable to update lead!');
+            return;
+        }
+        location.reload();
+    });
 }
 
-function init_page()
-{
-    $.ajax({
-        url: '../api/v1/areas',
-        type: 'get',
-        dataType: 'json',
-        success: areas_done});
+function initPage() {
+    fetch('../api/v1/areas').then((response) => {
+        if(response.ok) {
+            response.json().then((data) => {
+                areasDone(data);
+            });
+        }
+    });
+    let leadSelect = document.getElementById('lead_select');
+    leadSelect.addEventListener('change', () => {leadChange(leadSelect)});
 }
 
-$(init_page);
+window.onload = initPage;

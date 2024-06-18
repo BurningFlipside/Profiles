@@ -1,234 +1,225 @@
-var _gid = null;
-
-function getGID()
-{
-    if(_gid != null)
-    {
-        return _gid;
-    }
-    else
-    {
-        return getParameterByName('gid');
-    }
+function getGID() {
+    let searchParams = new URLSearchParams(window.location.search);
+    return searchParams.get('gid')
 }
 
-function groupsDone(jqXHR)
-{
-    if(jqXHR.status !== 200)
-    {
-        alert('Unable to obtain group list!');
-        return;
-    }
-    var groups = jqXHR.responseJSON;
-    for(var i = 0; i < groups.length; i++)
-    {
-        $('#group_select').append('<option value="'+groups[i].cn+'">'+groups[i].cn+'</option>');
-    }
-    var gid = getGID();
-    if(gid != null)
-    {
-        $('#group_select').val(gid);
-    }
-}
-
-function draw_done()
-{
-    $('td.removeControl').html('<span class="fa fa-minus"></span>');
-    $('td.addControl').html('<span class="fa fa-plus"></span>');
-}
-
-function add_clicked()
-{
-    var tr = $(this).closest('tr');
-    var non_members = $('#non-members').DataTable();
-    var members = $('#members').DataTable();
-    var row = non_members.row(tr);
-    var data = row.data();
-    row.remove().draw(false);
-    try
-    {
-        members.row.add(data).draw(false);
-    }
-    catch(TypeError)
-    {
-        /*Ignore Type errors when adding aata*/
-    }
-}
-
-function remove_clicked()
-{
-    var tr = $(this).closest('tr');
-    var non_members = $('#non-members').DataTable();
-    var members = $('#members').DataTable();
-    var row = members.row(tr);
-    var data = row.data();
-    row.remove().draw(false);
-    try
-    {
-        non_members.row.add(data).draw(false);
-    }
-    catch(TypeError)
-    {
-        /*Ignore Type errors when adding aata*/
-    }
-}
-
-function groupDataDone(jqXHR)
-{
-    if(jqXHR.status !== 200)
-    {
-        alert('Unable to obtain group list!');
-        return;
-    }
-    var group = jqXHR.responseJSON;
-    $('#gid').html(group.cn);
-    $('#gid_edit').val(group.cn);
-    $('#dn').html(group.dn);
-    $('#description').val(group.description);
-    var members = $('#members').DataTable();
-    var non_members = $('#non-members').DataTable();
-    members.clear();
-    for(var i = 0; i < group.member.length; i++)
-    {
-        if(group.member[i].sn !== undefined)
-        {
-            group.member[i].type = 'User';
-        }
-        else
-        {
-            group.member[i].type = 'Group';
-        }
-    }
-    members.rows.add(group.member).draw();
-    non_members.ajax.url('../api/v1/groups/'+group.cn+'/non-members?$select=cn,mail,description,givenName,sn,uid,type&fmt=data-table').load();
-    $('#group_data').show();
-    $('#members tbody').on('click', 'td.removeControl', remove_clicked);
-    $('#non-members tbody').on('click', 'td.addControl', add_clicked);
-}
-
-function populateGroupDropdown()
-{
+function populateGroupDropdown() {
+    let groupSelect = document.getElementById('group_select');
     //Turn off events on the dropdown
-    $('#group_select').change(null);
-    $.ajax({
-        url: '../api/v1/groups?$select=cn',
-        type: 'get',
-        dataType: 'json',
-        complete: groupsDone});
-    //Enable events on the dropdown
-    $('#group_select').change(groupSelectChange);
+    groupSelect.removeEventListener('change');
+    fetch('../api/v1/groups?$select=cn').then((response) => {
+        if(response.httpStatus === 401) {
+            // Not logged in, silently return
+            return;
+        }
+        response.json().then((groups) => {
+            for(const group of groups) {
+                let option = new Option(group.cn);
+                groupSelect.add(option);
+            }
+            let gid = getGID();
+            if(gid != null) {
+                groupSelect.value = gid;
+            }
+            groupSelect.addEventListener('change', groupSelectChange);
+        });
+    });
 }
 
-function populateGroupData()
-{
-    var gid = getGID();
-    if(($('#group_data').length > 0) && (gid != null))
-    {
-        $.ajax({
-            url: '../api/v1/groups/'+gid+'?$expand=member&directOnly=true',
-            type: 'get',
-            dataType: 'json',
-            complete: groupDataDone});
+function populateGroupData() {
+    let gid = getGID();
+    if(document.getElementById('group_data') !== null && gid !== null) {
+        fetch('../api/v1/groups/'+gid+'?$expand=member&directOnly=true').then((response) => {
+            if(response.httpStatus === 401) {
+                // Not logged in, silently return
+                return;
+            }
+            response.json().then((group) => {
+                document.getElementById('gid').innerText = group.cn;
+                document.getElementById('gid_edit').value = group.cn;
+                document.getElementById('description').value = group.description;
+                for(const member of group.member) {
+                    if(member.sn !== undefined) {
+                        member.type = 'User';
+                    } else {
+                        member.type = 'Group';
+                    }
+                }
+                let memberTableElem = document.getElementById('members');
+                let parent = memberTableElem.parentElement;
+                let node = document.createElement('div');
+                node.style.float = 'right';
+                node.style.textAlign = 'right';
+                node.innerText = 'Search:';
+                let search = document.createElement('input');
+                search.type = 'text';
+                search.style.border = '1px solid #aaa';
+                search.style.borderRadius = '5px';
+                search.style.padding = '2px';
+                node.appendChild(search);
+                parent.insertBefore(node, memberTableElem);
+                let memberTable = new Tabulator('#members', {
+                    data: group.member,
+                    pagination: true,
+                    height: '500px',
+                    columns: [
+                        {'title': '', width:'3%', formatter: (cell) => {
+                            let removeButton = document.createElement('button');
+                            removeButton.classList.add('btn', 'btn-link');
+                            removeButton.innerHTML = '<i class="fa fa-minus"></i>';
+                            removeButton.addEventListener('click', () => {
+                                memberTable.deleteRow(cell.getRow());
+                            });
+                            return removeButton;
+                        }},
+                        {'title': 'Username', 'field': 'uid', width:'20%'},
+                        {'title': 'Email', 'field': 'mail', width:'25%'},
+                        {'title': 'Name', 'field': 'displayName', width:'27%', mutator: (value, data) => {
+                            if(data.displayName === undefined || data.displayName === null || data.displayName === '') {
+                                return data.givenName+' '+data.sn;
+                            }
+                            return data.displayName;
+                        }},
+                        {'title': 'Title', 'field': 'titlenames', width:'20%'}
+                    ],
+                    initialSort: [
+                        {column: 'displayName', dir: 'asc'}
+                    ]
+                });
+                memberTable.on('tableBuilt', () => {
+                    memberTable.setData(group.member);
+                });
+                let nonMmberTableElem = document.getElementById('non-members');
+                parent = nonMmberTableElem.parentElement;
+                node = document.createElement('div');
+                node.style.float = 'right';
+                node.style.textAlign = 'right';
+                node.innerText = 'Search:';
+                let nmSearch = document.createElement('input');
+                nmSearch.type = 'text';
+                nmSearch.style.border = '1px solid #aaa';
+                nmSearch.style.borderRadius = '5px';
+                nmSearch.style.padding = '2px';
+                node.appendChild(nmSearch);
+                parent.insertBefore(node, nonMmberTableElem);
+                let nonMemberTable = new Tabulator('#non-members', {
+                    ajaxURL: '../api/v1/groups/'+gid+'/non-members?$select=displayName,mail,givenName,sn,uid',
+                    pagination: true,
+                    height: '500px',
+                    columns: [
+                        {'title': '', width:'3%', formatter: (cell) => {
+                            let addButton = document.createElement('button');
+                            addButton.classList.add('btn', 'btn-link');
+                            addButton.innerHTML = '<i class="fa fa-plus"></i>';
+                            addButton.addEventListener('click', () => {
+                                let data = cell.getRow().getData();
+                                memberTable.addRow(data);
+                                nonMemberTable.deleteRow(cell.getRow());
+                            });
+                            return addButton;
+                        }
+                        },
+                        {'title': 'Username', 'field': 'uid', width:'20%'},
+                        {'title': 'Email', 'field': 'mail', width:'25%'},
+                        {'title': 'Name', 'field': 'displayName', width:'27%', mutator: (value, data) => {
+                            if(data.displayName === undefined || data.displayName === null || data.displayName === '') {
+                                return data.givenName+' '+data.sn;
+                            }
+                            return data.displayName;
+                        }},
+                        {'title': 'Title', 'field': 'titlenames', width:'20%'}
+                    ],
+                    initialSort: [
+                        {column: 'displayName', dir: 'asc'}
+                    ]
+                });
+                nonMemberTable.on('tableBuilt', () => {
+                    nonMemberTable.setData();
+                });
+                search.addEventListener('input', () => {
+                    memberTable.clearFilter();
+                    if(search.value !== '') {
+                        memberTable.setFilter((data) => {
+                            let title = data.titlenames === null ? '' : data.titlenames[0];
+                            let ret = data.uid.toLowerCase().includes(search.value.toLowerCase()) ||
+                                data.mail.toLowerCase().includes(search.value.toLowerCase()) ||
+                                data.displayName.toLowerCase().includes(search.value.toLowerCase()) ||
+                                title.toLowerCase().includes(search.value.toLowerCase());
+                            return ret;
+                        });
+                    }
+                });
+                nmSearch.addEventListener('input', () => {
+                    nonMemberTable.clearFilter();
+                    if(nmSearch.value !== '') {
+                        nonMemberTable.setFilter((data) => {
+                            if(data.cn !== undefined) {
+                                // This is a group
+                                return data.cn.toLowerCase().includes(nmSearch.value.toLowerCase()) || data.description.toLowerCase().includes(nmSearch.value.toLowerCase());
+                            }
+                            let title = data.titlenames === undefined ? '' : data.titlenames[0];
+                            let name = (data.displayName === undefined || data.displayName === false) ? data.givenName+' '+data.sn : data.displayName;
+                            let ret = data.uid.toLowerCase().includes(nmSearch.value.toLowerCase()) ||
+                                data.mail.toLowerCase().includes(nmSearch.value.toLowerCase()) ||
+                                name.toLowerCase().includes(nmSearch.value.toLowerCase()) ||
+                                title.toLowerCase().includes(nmSearch.value.toLowerCase());
+                            return ret;
+                        });
+                    }
+                });
+            });
+        });
     }
 }
 
-function groupSelectChange()
-{
-    _gid = $(this).val();
-    populateGroupData(); 
+function groupSelectChange() {
+    let select = document.getElementById('group_select');
+    location.href = location.pathname+'?gid='+select.value;
 }
 
-function groupSubmitDone(jqXHR)
-{
-    if(jqXHR.status !== 200)
-    {
-        alert('Unable to update group!');
-        console.log(jqXHR);
-        return;
-    }
-    alert('Success!');
-    location = 'group_edit.php?gid='+getGID();
-}
-
-function groupDataSubmitted(e)
-{
+function groupDataSubmitted(e) {
     e.preventDefault();
-    var group = $('#form :input:not(select)').serializeObject();
-    var members = $('#members').DataTable().data();
+    let group = {
+        cn: document.getElementById('gid_edit').value,
+        description: document.getElementById('description').value
+    };
+    let memberTable = Tabulator.findTable('#members')[0];
+    var members = memberTable.getData();
     group.member = [];
-    for(var i = 0; i < members.length; i++)
-    {
-       var child = {};
-       child.type = members[i].type;
-       if(members[i].type === 'Group')
-       {
-           child.cn = members[i].cn;
-       }
-       else
-       {
-           child.uid = members[i].uid;
-       }
-       group.member.push(child);
+    for(const member of members) {
+        let child = {};
+        child.type = member.type;
+        if(member.type === 'Group') {
+            child.cn = member.cn;
+        } else {
+            child.type = 'User';
+            child.uid = member.uid;
+        }
+        group.member.push(child);
     }
-    $.ajax({
-        url: '../api/v1/groups/'+getGID(),
-        data: JSON.stringify(group),
-        type: 'PATCH',
-        contentType: 'application/json',
-        dataType: 'json',
-        processData: false,
-        complete: groupSubmitDone});
+    fetch('../api/v1/groups/'+getGID(), {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(group)
+    }).then((response) => {
+        if(response.ok) {
+            alert('Success!');
+            location.reload();
+            return;
+        }
+        alert('Unable to update group!');
+        console.log(response);
+    });
     return false;
 }
 
-function renderID(data, type, row)
-{
-    if(row.uid !== undefined)
-    {
-        return row.uid;
-    }
-    else
-    {
-        return row.cn;
-    }
-}
-
-function renderName(data, type, row)
-{
-    if(row.sn !== undefined)
-    {
-        return row.givenName+' '+row.sn;
-    }
-    else
-    {
-        return row.description;
-    }
-}
-
-function do_group_edit_init()
-{
-    $('#members').on('draw.dt', draw_done);
-    $('#non-members').on('draw.dt', draw_done);
-    $('#members').dataTable({
-        'columns': [
-            {'className':'removeControl','data':null,'defaultContent':'','orderable':false},
-            {'data': 'uid', 'defaultContent':'', 'render': renderID},
-            {'data': 'mail', 'defaultContent':'N/A'},
-            {'data': 'name', 'defaultContent':'', 'render': renderName}],
-        'order': [[1, 'asc']]
-    });
-    $('#non-members').dataTable({
-        'columns':[
-            {'className':'addControl','data':null,'defaultContent':'','orderable':false},
-            {'data': 'uid', 'defaultContent':'', 'render': renderID},
-            {'data': 'mail', 'defaultContent':'N/A'},
-            {'data': 'name', 'defaultContent':'', 'render': renderName}],
-        'order': [[1, 'asc']]
-    });
+function doGroupEditInit() {
     populateGroupDropdown();
     populateGroupData();
-    $("#form").submit(groupDataSubmitted);
-    $('#submit').removeAttr("disabled");
+    document.getElementById('form').addEventListener('submit', groupDataSubmitted);
+    document.getElementById('submit').removeAttribute('disabled');
 }
 
-$(do_group_edit_init);
+window.onload = doGroupEditInit;

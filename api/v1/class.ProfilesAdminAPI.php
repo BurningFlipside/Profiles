@@ -10,7 +10,7 @@ class ProfilesAdminAPI extends Flipside\Http\Rest\RestAPI
         {
             throw new Exception('Must be logged in', \Http\Rest\ACCESS_DENIED);
         }
-        if(!$this->user->isInGroupNamed('LDAPAdmins'))
+        if(!$this->user->isInGroupNamed('ProfileAdmins'))
         {
             if($nonFatal)
             {
