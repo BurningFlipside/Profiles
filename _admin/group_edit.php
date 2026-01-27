@@ -15,17 +15,22 @@ if(!isset($_GET['gid']))
 
     $page->body .= '
 <div id="content">
-    Select Group: <select id="group_select"></select>
+    <div class="row">
+        <label class="col-sm-2 control-label">Group Edit:</label>
+        <div class="col-sm-10">
+            <select id="group_select" class="form-select"></select>
+        </div> 
+    </div>
     <form method="post" id="form">
         <fieldset id="group_data" '.$hidden.'>
             <legend id="gid"></legend>
-            <div class="form-group">
+            <div class="form-group row">
                 <label class="col-sm-2 control-label">Group Name:</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" name="gid" id="gid_edit" disabled="true"/>
                </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <label class="col-sm-2 control-label">Description:</label>
                 <div class="col-sm-10">
                     <textarea class="form-control" name="description" id="description"></textarea>

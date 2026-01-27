@@ -5,6 +5,9 @@ function getGID() {
 
 function populateGroupDropdown() {
     let groupSelect = document.getElementById('group_select');
+    if(!groupSelect) {
+        return;
+    }
     //Turn off events on the dropdown
     groupSelect.removeEventListener('change');
     fetch('../api/v1/groups?$select=cn').then((response) => {
@@ -72,9 +75,19 @@ function populateGroupData() {
                             });
                             return removeButton;
                         }},
-                        {'title': 'Username', 'field': 'uid', width:'20%'},
+                        {'title': 'Username', 'field': 'uid', width:'20%', formatter: (cell) => {
+                            let data = cell.getRow().getData();
+                            if(data.type === 'Group') {
+                                return '<i class="fas fa-users"></i> '+data.cn;
+                            }
+                            return cell.getValue();
+                        }},
                         {'title': 'Email', 'field': 'mail', width:'25%'},
                         {'title': 'Name', 'field': 'displayName', width:'27%', mutator: (value, data) => {
+                            if(data.description) {
+                                // This is a group
+                                return data.description;
+                            }
                             if(data.displayName === undefined || data.displayName === null || data.displayName === '') {
                                 return data.givenName+' '+data.sn;
                             }
@@ -122,6 +135,10 @@ function populateGroupData() {
                         {'title': 'Username', 'field': 'uid', width:'20%'},
                         {'title': 'Email', 'field': 'mail', width:'25%'},
                         {'title': 'Name', 'field': 'displayName', width:'27%', mutator: (value, data) => {
+                            if(data.description) {
+                                // This is a group
+                                return data.description;
+                            }
                             if(data.displayName === undefined || data.displayName === null || data.displayName === '') {
                                 return data.givenName+' '+data.sn;
                             }
@@ -140,7 +157,10 @@ function populateGroupData() {
                     memberTable.clearFilter();
                     if(search.value !== '') {
                         memberTable.setFilter((data) => {
-                            let title = data.titlenames === null ? '' : data.titlenames[0];
+                            let title = '';
+                            if(data.titlenames && data.titlenames.length > 0) {
+                                title = data.titlenames[0];
+                            }
                             let ret = data.uid.toLowerCase().includes(search.value.toLowerCase()) ||
                                 data.mail.toLowerCase().includes(search.value.toLowerCase()) ||
                                 data.displayName.toLowerCase().includes(search.value.toLowerCase()) ||
