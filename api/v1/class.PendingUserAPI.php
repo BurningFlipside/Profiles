@@ -7,6 +7,7 @@ class PendingUserAPI extends ProfilesAdminAPI
         $app->get('/{hash}[/]', array($this, 'showPendingUser'));
         $app->delete('/{hash}[/]', array($this, 'deletePendingUser'));
         $app->map(['GET', 'POST'], '/{hash}/Actions/activate[/]', array($this, 'activatePendingUser'));
+        $app->post('/{hash}/Actions/PendingUser.ResendEmail', array($this, 'resendEmail'));
     }
 
     public function listPendingUsers($request, $response)
@@ -70,6 +71,15 @@ class PendingUserAPI extends ProfilesAdminAPI
         {
             return $response->withJson($res);
         }
+    }
+
+    public function resendEmail($request, $response, $args)
+    {
+        $this->validateIsAdmin($request);
+        $auth = \Flipside\AuthProvider::getInstance();
+        $pendingUser = $auth->getTempUserByHash($args["hash"]);
+        $res = $pendingUser->sendEmail();
+        return $response->withJson($res);
     }
 }
 /* vim: set tabstop=4 shiftwidth=4 expandtab: */

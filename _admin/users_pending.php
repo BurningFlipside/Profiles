@@ -15,11 +15,6 @@ $page->body .= '
 </div>
 <div id="pending_set">
   <div class="row">
-    <select class="form-control col-sm-2" name="pending_action" id="pending_action">
-      <option value="none">Action...</option>
-      <option value="del">Delete</option>
-    </select>
-    <button class="btn btn-primary col-sm-1" type="button" onclick="pendingExecute()">Apply</button>
   </div>
   <table id="pending_table" class="table">
     <thead>
